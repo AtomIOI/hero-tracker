@@ -1,129 +1,168 @@
---color-cyan: #00aeef;
---color-magenta: #ec008c;
---color-yellow: #fff200;
---color-black: #231f20;
-}
+<!DOCTYPE html>
+<html lang="en">
 
-/* Global Styles */
-body {
-font-family: 'Comic Neue', cursive, sans-serif;
-background-color: var(--color-paper);
-background-image:
-radial-gradient(var(--color-ink) 1px, transparent 1px),
-radial-gradient(var(--color-ink) 1px, transparent 1px);
-background-size: 20px 20px;
-background-position: 0 0, 10px 10px;
-}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-/* Typography */
-.comic-title {
-font-family: 'Bangers', cursive;
-letter-spacing: 2px;
-text-transform: uppercase;
-text-shadow: 3px 3px 0px var(--color-ink);
-}
+    <!-- PWA Configuration -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Hero Tracker">
+    <meta name="theme-color" content="#ec008c">
+    <meta name="description" content="Modular Hero Character Tracker with Vintage Comic Book Aesthetic">
 
-/* Layout Components */
-.comic-card {
-background-color: white;
-border: 4px solid var(--color-ink);
-box-shadow: 8px 8px 0px var(--color-black);
-position: relative;
-}
+    <!-- Manifest -->
+    <link rel="manifest" href="/manifest.json">
 
-.comic-card::before {
-content: '';
-position: absolute;
-top: -4px;
-left: -4px;
-right: -4px;
-bottom: -4px;
-border: 2px solid var(--color-ink);
-pointer-events: none;
-}
+    <!-- Icons -->
+    <link rel="icon" type="image/svg+xml" href="/assets/icons/placeholder-icon.svg">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192.png">
 
-/* Interactive Elements */
-.comic-button {
-border: 3px solid var(--color-ink);
-box-shadow: 4px 4px 0px var(--color-black);
-font-family: 'Bangers', cursive;
-letter-spacing: 1px;
-transition: all 0.2s ease;
-}
+    <title>Hero Tracker</title>
 
-.comic-button:active {
-box-shadow: 2px 2px 0px var(--color-black);
-transform: translate(2px, 2px);
-}
+    <!-- Scripts -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-.comic-input {
-border: 3px solid var(--color-ink);
-padding: 0.5rem;
-font-family: 'Comic Neue', cursive;
-font-weight: bold;
-background-color: white;
-}
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap"
+        rel="stylesheet">
 
-.comic-input:focus {
-outline: none;
-box-shadow: 0 0 0 3px var(--color-yellow);
-}
+    <style>
+        /* CSS Variables */
+        :root {
+            --color-paper: #fdf6e3;
+            --color-ink: #1a1a1a;
+            --color-cyan: #00aeef;
+            --color-magenta: #ec008c;
+            --color-yellow: #fff200;
+            --color-black: #231f20;
+        }
 
-/* Special Effects */
-.locked-ability {
-position: relative;
-opacity: 0.6;
-pointer-events: none;
-background: repeating-linear-gradient(45deg,
-transparent,
-transparent 10px,
-rgba(0, 0, 0, 0.1) 10px,
-rgba(0, 0, 0, 0.1) 20px);
-}
+        /* Global Styles */
+        body {
+            font-family: 'Comic Neue', cursive, sans-serif;
+            background-color: var(--color-paper);
+            background-image:
+                radial-gradient(var(--color-ink) 1px, transparent 1px),
+                radial-gradient(var(--color-ink) 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+        }
 
-.locked-ability::after {
-content: 'LOCKED!';
-font-family: 'Bangers', cursive;
-position: absolute;
-top: 50%;
-left: 50%;
-transform: translate(-50%, -50%) rotate(-15deg);
-font-size: 2.5rem;
-color: var(--color-magenta);
-text-shadow: 2px 2px 0px white, 4px 4px 0px var(--color-ink);
-border: 3px solid var(--color-ink);
-padding: 0.5rem 1rem;
-background: white;
-box-shadow: 4px 4px 0px var(--color-black);
-z-index: 10;
-}
+        /* Typography */
+        .comic-title {
+            font-family: 'Bangers', cursive;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 3px 3px 0px var(--color-ink);
+        }
 
-/* Theme Variants */
-.theme-green {
-background-color: #e0f2fe;
-background-image: radial-gradient(var(--color-cyan) 2px, transparent 2px);
-background-size: 15px 15px;
-}
+        /* Layout Components */
+        .comic-card {
+            background-color: white;
+            border: 4px solid var(--color-ink);
+            box-shadow: 8px 8px 0px var(--color-black);
+            position: relative;
+        }
 
-.theme-yellow {
-background-color: #fef3c7;
-background-image: radial-gradient(var(--color-yellow) 2px, transparent 2px);
-background-size: 15px 15px;
-}
+        .comic-card::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid var(--color-ink);
+            pointer-events: none;
+        }
 
-.theme-red {
-background-color: #fee2e2;
-background-image: radial-gradient(var(--color-magenta) 2px, transparent 2px);
-background-size: 15px 15px;
-}
+        /* Interactive Elements */
+        .comic-button {
+            border: 3px solid var(--color-ink);
+            box-shadow: 4px 4px 0px var(--color-black);
+            font-family: 'Bangers', cursive;
+            letter-spacing: 1px;
+            transition: all 0.2s ease;
+        }
 
-.theme-out {
-background-color: #f3f4f6;
-background-image: radial-gradient(var(--color-black) 2px, transparent 2px);
-background-size: 15px 15px;
-filter: grayscale(100%) contrast(1.2);
-}
-</style>
+        .comic-button:active {
+            box-shadow: 2px 2px 0px var(--color-black);
+            transform: translate(2px, 2px);
+        }
+
+        .comic-input {
+            border: 3px solid var(--color-ink);
+            padding: 0.5rem;
+            font-family: 'Comic Neue', cursive;
+            font-weight: bold;
+            background-color: white;
+        }
+
+        .comic-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px var(--color-yellow);
+        }
+
+        /* Special Effects */
+        .locked-ability {
+            position: relative;
+            opacity: 0.6;
+            pointer-events: none;
+            background: repeating-linear-gradient(45deg,
+                    transparent,
+                    transparent 10px,
+                    rgba(0, 0, 0, 0.1) 10px,
+                    rgba(0, 0, 0, 0.1) 20px);
+        }
+
+        .locked-ability::after {
+            content: 'LOCKED!';
+            font-family: 'Bangers', cursive;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-15deg);
+            font-size: 2.5rem;
+            color: var(--color-magenta);
+            text-shadow: 2px 2px 0px white, 4px 4px 0px var(--color-ink);
+            border: 3px solid var(--color-ink);
+            padding: 0.5rem 1rem;
+            background: white;
+            box-shadow: 4px 4px 0px var(--color-black);
+            z-index: 10;
+        }
+
+        /* Theme Variants */
+        .theme-green {
+            background-color: #e0f2fe;
+            background-image: radial-gradient(var(--color-cyan) 2px, transparent 2px);
+            background-size: 15px 15px;
+        }
+
+        .theme-yellow {
+            background-color: #fef3c7;
+            background-image: radial-gradient(var(--color-yellow) 2px, transparent 2px);
+            background-size: 15px 15px;
+        }
+
+        .theme-red {
+            background-color: #fee2e2;
+            background-image: radial-gradient(var(--color-magenta) 2px, transparent 2px);
+            background-size: 15px 15px;
+        }
+
+        .theme-out {
+            background-color: #f3f4f6;
+            background-image: radial-gradient(var(--color-black) 2px, transparent 2px);
+            background-size: 15px 15px;
+            filter: grayscale(100%) contrast(1.2);
+        }
+    </style>
 </head>
 
 <body class="min-h-screen p-4" id="app">
