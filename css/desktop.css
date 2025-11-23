@@ -1,0 +1,57 @@
+/* Desktop Layout (> 768px) */
+
+@media (min-width: 768px) {
+    :root {
+        --panel-gap: 1.5rem;
+        --panel-padding: 1.5rem;
+    }
+
+    body {
+        padding: 2rem;
+    }
+
+    .app-container {
+        max-width: 1200px;
+    }
+
+    /* Header - not sticky on desktop */
+    .app-header {
+        position: relative;
+    }
+
+    /* Grid layouts for desktop */
+    .health-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--panel-gap);
+    }
+
+    .modules-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dice-controls {
+        flex-direction: row;
+    }
+
+    .hero-tracking-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--panel-gap);
+    }
+
+    /* Disable collapsible panels on desktop */
+    .panel-collapsible .panel-content {
+        max-height: none !important;
+    }
+
+    .panel-toggle {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .app-container {
+        max-width: 1400px;
+    }
+}

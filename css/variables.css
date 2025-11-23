@@ -1,0 +1,17 @@
+/* CSS Custom Properties */
+:root {
+    --color-paper: #fdf6e3;
+    --color-ink: #1a1a1a;
+    --color-cyan: #00aeef;
+    --color-magenta: #ec008c;
+    --color-yellow: #fff200;
+    --color-black: #231f20;
+    
+    /* Spacing */
+    --panel-gap: 1.5rem;
+    --panel-padding: 1.5rem;
+    
+    /* Typography */
+    --font-heading: 'Bangers', cursive;
+    --font-body: 'Comic Neue', cursive, sans-serif;
+}
