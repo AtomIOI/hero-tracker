@@ -127,6 +127,7 @@
             /* Another wobble variation */
             border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
             box-shadow: 4px 4px 0px var(--color-ink);
+            position: relative;
         }
 
         .section-label {
@@ -207,6 +208,57 @@
             border-top: 10px solid transparent;
             border-bottom: 10px solid transparent;
             border-right: 20px solid white;
+        }
+
+        .health-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: white;
+            padding: 0.3rem;
+            border: 2px solid var(--color-ink);
+            border-radius: 15px 255px 15px 255px / 255px 15px 225px 15px;
+            box-shadow: 3px 3px 0px var(--color-ink);
+            transform: rotate(1deg);
+        }
+
+        .health-btn {
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--color-ink);
+            border-radius: 50%;
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 1px 1px 0px var(--color-ink);
+            transition: transform 0.1s;
+        }
+
+        .health-btn:active {
+            transform: translate(1px, 1px);
+            box-shadow: none;
+        }
+
+        .health-btn.minus {
+            background-color: var(--color-magenta);
+        }
+
+        .health-btn.plus {
+            background-color: var(--color-green);
+        }
+
+        .health-value {
+            font-family: 'Bangers', cursive;
+            font-size: 1.5rem;
+            min-width: 30px;
+            text-align: center;
         }
 
         .health-bar-container {
@@ -388,6 +440,11 @@
     <!-- Current Status Panel -->
     <div class="status-panel">
         <div class="section-label">CURRENT STATUS</div>
+        <div class="health-controls">
+            <button class="health-btn minus" @click="changeHealth(-1)">-</button>
+            <div class="health-value">{{ character.currentHealth }}</div>
+            <button class="health-btn plus" @click="changeHealth(1)">+</button>
+        </div>
         <div class="portrait-container">
             <div class="comic-portrait">
                 <img src="default-profile.jpg" alt="Hero Profile Picture">
@@ -453,8 +510,8 @@
             data() {
                 return {
                     character: {
-                        currentHealth: 75,
-                        maxHealth: 100,
+                        currentHealth: 30, // Changed from 75
+                        maxHealth: 30,     // Changed from 100
                         heroPoints: 3,
                         modifiers: 2
                     }
@@ -473,6 +530,12 @@
                     if (pct >= 35) return "I CAN KEEP GOING!";
                     if (pct >= 1) return "I NEED BACKUP!";
                     return "DOWN FOR THE COUNT!";
+                },
+                changeHealth(amount) {
+                    const newHealth = this.character.currentHealth + amount;
+                    if (newHealth >= 0 && newHealth <= this.character.maxHealth) {
+                        this.character.currentHealth = newHealth;
+                    }
                 },
                 getSegmentClass(segmentNumber) {
                     const pct = this.healthPercentage;
