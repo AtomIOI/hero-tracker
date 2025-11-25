@@ -225,7 +225,8 @@
             transform: rotate(1deg);
         }
 
-        .health-btn {
+        /* Generic Comic Button - Reusable */
+        .comic-btn {
             width: 30px;
             height: 30px;
             border: 2px solid var(--color-ink);
@@ -241,16 +242,16 @@
             transition: transform 0.1s;
         }
 
-        .health-btn:active {
+        .comic-btn:active {
             transform: translate(1px, 1px);
             box-shadow: none;
         }
 
-        .health-btn.minus {
+        .comic-btn.minus {
             background-color: var(--color-magenta);
         }
 
-        .health-btn.plus {
+        .comic-btn.plus {
             background-color: var(--color-green);
         }
 
@@ -259,6 +260,63 @@
             font-size: 1.5rem;
             min-width: 30px;
             text-align: center;
+        }
+
+        .hero-points-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        /* Hero Points Specific Styles */
+        .hero-label {
+            position: absolute;
+            top: -10px;
+            left: -5px;
+            transform: rotate(-3deg);
+            z-index: 10;
+        }
+
+        .hero-points-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .hero-btn-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .hero-btn {
+            width: 40px;
+            height: 25px;
+            /* Rectangular shape */
+            background-color: var(--color-yellow);
+            border: 2px solid var(--color-ink);
+            border-radius: 4px;
+            /* Slight rounding */
+            font-family: 'Bangers', cursive;
+            font-size: 1.2rem;
+            color: var(--color-ink);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 2px 2px 0px var(--color-ink);
+            transition: transform 0.1s;
+            line-height: 1;
+            padding-bottom: 2px;
+            /* Visual alignment */
+        }
+
+        .hero-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: none;
         }
 
         .health-bar-container {
@@ -329,7 +387,8 @@
         }
 
         .stat-star {
-            font-size: 4rem;
+            font-size: 7rem;
+            /* Changed from 4rem */
             color: var(--color-yellow);
             text-shadow:
                 -2px -2px 0 #000,
@@ -343,7 +402,7 @@
 
         .stat-number {
             position: absolute;
-            top: 50%;
+            top: 54%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-family: 'Bangers', cursive;
@@ -441,9 +500,9 @@
     <div class="status-panel">
         <div class="section-label">CURRENT STATUS</div>
         <div class="health-controls">
-            <button class="health-btn minus" @click="changeHealth(-1)">-</button>
+            <button class="comic-btn minus" @click="changeHealth(-1)">-</button>
             <div class="health-value">{{ character.currentHealth }}</div>
-            <button class="health-btn plus" @click="changeHealth(1)">+</button>
+            <button class="comic-btn plus" @click="changeHealth(1)">+</button>
         </div>
         <div class="portrait-container">
             <div class="comic-portrait">
@@ -466,11 +525,17 @@
     <!-- Hero Stats Panel -->
     <div class="stats-grid">
         <!-- Hero Points -->
-        <div class="stat-box">
-            <div class="section-label" style="transform: rotate(-3deg); margin-bottom: 1rem;">HERO POINTS</div>
-            <div class="stat-star">
-                ★
-                <div class="stat-number">{{ character.heroPoints }}</div>
+        <div class="stat-box" style="position: relative;">
+            <div class="section-label hero-label">HERO POINTS</div>
+            <div class="hero-points-controls">
+                <div class="stat-star">
+                    ★
+                    <div class="stat-number">{{ character.heroPoints }}</div>
+                </div>
+                <div class="hero-btn-stack">
+                    <button class="hero-btn" @click="changeHeroPoints(1)">+</button>
+                    <button class="hero-btn" @click="changeHeroPoints(-1)">-</button>
+                </div>
             </div>
         </div>
 
@@ -535,6 +600,12 @@
                     const newHealth = this.character.currentHealth + amount;
                     if (newHealth >= 0 && newHealth <= this.character.maxHealth) {
                         this.character.currentHealth = newHealth;
+                    }
+                },
+                changeHeroPoints(amount) {
+                    const newPoints = this.character.heroPoints + amount;
+                    if (newPoints >= 0) {
+                        this.character.heroPoints = newPoints;
                     }
                 },
                 getSegmentClass(segmentNumber) {
