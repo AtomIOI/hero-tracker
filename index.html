@@ -103,6 +103,11 @@
 
             <add-edit-ability-modal :show="showAddEditAbilityModal" :ability="editingAbility" @close="closeAddEditAbilityModal" @save="saveAbility" @delete="deleteAbility"></add-edit-ability-modal>
         </div>
+
+        <!-- Powers & Qualities Page -->
+        <div v-if="currentPage === 'powers-qualities'">
+            <powers-qualities-page :hero="characterSheet.hero"></powers-qualities-page>
+        </div>
     </main>
 
     <!-- Bottom Navigation -->
@@ -114,6 +119,10 @@
         <div class="nav-item" :class="{ active: currentPage === 'abilities' }" @click="setPage('abilities')">
             <div class="nav-icon powers"></div>
             <span>ABILITIES</span>
+        </div>
+        <div class="nav-item" :class="{ active: currentPage === 'powers-qualities' }" @click="setPage('powers-qualities')">
+            <div class="nav-icon powers-qualities"></div>
+            <span>P & Q</span>
         </div>
         <div class="nav-item" :class="{ active: currentPage === 'dice' }" @click="setPage('dice')">
             <div class="nav-icon dice"></div>
@@ -128,6 +137,8 @@
     <script src="js/app.js"></script>
     <script src="js/components/AbilityCard.js"></script>
     <script src="js/components/AddEditAbilityModal.js"></script>
+    <script src="js/components/AddEditTraitModal.js"></script>
+    <script src="js/components/PowersQualitiesPage.js"></script>
 </body>
 
 </html>

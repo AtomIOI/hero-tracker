@@ -32,7 +32,14 @@ const app = createApp({
                         yellow: 8,
                         red: 10
                     },
-                    qualities: [],
+                    powers: [
+                        { id: 'lightning-bolt', name: 'Lightning Bolt', die: 10 },
+                        { id: 'weather-control', name: 'Weather Control', die: 8 }
+                    ],
+                    qualities: [
+                        { id: 'banter', name: 'Banter', die: 8 },
+                        { id: 'leadership', name: 'Leadership', die: 6 }
+                    ],
                     abilities: [
                         { id: 'laser-eyes', name: 'Laser Eyes', die: 8, zone: 'green', text: 'Shoots lasers from eyes.' },
                         { id: 'flight', name: 'Flight', die: 10, zone: 'yellow', text: 'Can fly.' },
