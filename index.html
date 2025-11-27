@@ -74,25 +74,27 @@
                     </div>
                 </div>
 
-                <!-- Hero Points -->
-                <div class="hero-points-container">
-                    <div class="section-label">HERO POINTS</div>
-                    <div class="controls">
-                        <button class="comic-btn minus" @click="changeHeroPoints(-1)">-</button>
-                        <div class="value-star">
-                            <div class="value">{{ characterSheet.hero.heroPoints.current }}</div>
+                <div class="stats-grid">
+                    <!-- Hero Points -->
+                    <div class="stat-box hero-points-container">
+                        <div class="section-label">HERO POINTS</div>
+                        <div class="controls">
+                            <button class="comic-btn minus" @click="changeHeroPoints(-1)">-</button>
+                            <div class="value-star">
+                                <div class="value">{{ characterSheet.hero.heroPoints.current }}</div>
+                            </div>
+                            <button class="comic-btn plus" @click="changeHeroPoints(1)">+</button>
                         </div>
-                        <button class="comic-btn plus" @click="changeHeroPoints(1)">+</button>
                     </div>
-                </div>
 
-                <!-- Modifier -->
-                <div class="modifier-container">
-                    <div class="section-label">MODIFIER</div>
-                    <div class="controls">
-                        <button class="comic-btn minus" @click="changeModifier(-1)">-</button>
-                        <div class="value">{{ characterSheet.hero.modifier.current }}</div>
-                        <button class="comic-btn plus" @click="changeModifier(1)">+</button>
+                    <!-- Modifier -->
+                    <div class="stat-box modifier-container">
+                        <div class="section-label">MODIFIER</div>
+                        <div class="controls">
+                            <button class="comic-btn minus" @click="changeModifier(-1)">-</button>
+                            <div class="value">{{ characterSheet.hero.modifier.current }}</div>
+                            <button class="comic-btn plus" @click="changeModifier(1)">+</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -215,6 +215,11 @@
     text-align: center;
 }
 
+.stats-grid .hero-points-container,
+.stats-grid .modifier-container {
+    margin-top: 0;
+}
+
 .hero-points-container .controls,
 .modifier-container .controls {
     display: flex;
