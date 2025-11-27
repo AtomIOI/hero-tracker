@@ -64,7 +64,10 @@
                         <div v-for="n in 10" :key="n" class="health-segment" :class="getSegmentClass(n)"></div>
                     </div>
                 </div>
+            </div>
 
+            <!-- Stats Grid -->
+            <div class="stats-grid">
                 <!-- Hero Points -->
                 <div class="hero-points-container">
                     <div class="section-label">HERO POINTS</div>
@@ -79,7 +82,7 @@
 
                 <!-- Modifier -->
                 <div class="modifier-container">
-                    <div class="section-label">MODIFIER</div>
+                    <div class="section-label">MODIFIERS</div>
                     <div class="controls">
                         <button class="comic-btn minus" @click="changeModifier(-1)">-</button>
                         <div class="value">{{ characterSheet.hero.modifier.current }}</div>

@@ -199,8 +199,19 @@
 
 .hero-points-container,
 .modifier-container {
-    margin-top: 1.5rem;
+    margin-top: 0;
     text-align: center;
+    background: #fdf6e3; /* Cream background */
+    background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
+    background-size: 8px 8px; /* Ben-Day dots */
+    border: 3px solid var(--color-ink);
+    border-radius: 15px 225px 15px 255px / 255px 15px 225px 15px;
+    box-shadow: 4px 4px 0px var(--color-ink);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .hero-points-container .controls,
@@ -208,8 +219,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
-    margin-top: 0.5rem;
+    gap: 0.5rem;
+    margin-top: auto;
+    width: 100%;
 }
 
 .value-star {
@@ -330,6 +342,7 @@
     opacity: 0.3;
 }
 
+/* Layout for Hero Points and Modifiers */
 .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
