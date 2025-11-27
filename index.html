@@ -12,6 +12,15 @@
     <meta name="apple-mobile-web-app-title" content="Hero Tracker">
     <meta name="theme-color" content="#ec008c">
 
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" href="/assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" href="/assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/Hero_Tracker_Icon.png">
+
     <title>Hero Tracker - Nano Banana</title>
 
     <!-- Vue 3 CDN -->
@@ -548,6 +557,11 @@
         </div>
     </div>
 
+    <!-- Install PWA Button (shown when available) -->
+    <button id="install-button" class="comic-btn plus" style="display:none; position: fixed; right: 1rem; bottom: 5rem; z-index: 1000; width: auto; height: auto; padding: 0.5rem 1rem; border-radius: 8px;">
+        Install App
+    </button>
+
     <!-- Bottom Navigation -->
     <nav class="nav-bar">
         <div class="nav-item active">
@@ -568,7 +582,18 @@
         </div>
     </nav>
 
-    <script>
+    <script type="module">
+        import PWAManager from './js/pwa.js';
+        const pwa = new PWAManager();
+        pwa.registerServiceWorker();
+        pwa.setupInstallPrompt();
+        const installBtn = document.getElementById('install-button');
+        if (installBtn) {
+            installBtn.addEventListener('click', async () => {
+                await pwa.promptInstall();
+            });
+        }
+
         const { createApp } = Vue;
 
         createApp({
