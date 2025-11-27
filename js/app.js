@@ -199,4 +199,5 @@ const app = createApp({
     }
 });
 
-app.mount('#app');
+// Defer mounting until all components are registered (see index.html)
+window.__heroApp = app;
