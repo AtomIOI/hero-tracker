@@ -31,6 +31,16 @@
     }
 }
 
+/* Mobile Adjustments for Containers */
+@media (max-width: 768px) {
+    .settings-container .wobbly-box {
+        /* Add extra margin to ensure borders/shadows don't touch screen edges or overflow */
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        width: auto;
+    }
+}
+
 /* Utility Classes */
 .gap-4 {
     gap: 1rem;
@@ -58,6 +68,10 @@
 
 .p-2 {
     padding: 0.5rem;
+}
+
+.p-4 {
+    padding: 1rem;
 }
 
 .mt-2 {
