@@ -50,8 +50,8 @@
 .bg-dots {
     background-image: radial-gradient(var(--color-ink) 1px, transparent 1px);
     background-size: 8px 8px;
-    background-color: rgba(255, 255, 255, 0.9);
-    /* Fade dots slightly */
+    background-color: transparent;
+    /* Transparent so dots are stark against white container background */
 }
 
 .pattern-dots {
