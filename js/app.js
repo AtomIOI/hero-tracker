@@ -1,8 +1,16 @@
+/**
+ * Main Vue Application instance.
+ * Initializes the application state, handles global methods, and manages data persistence.
+ */
 const { createApp } = Vue;
 
 const app = createApp({
     data() {
         return {
+            /**
+             * The main character sheet data structure.
+             * @type {Object}
+             */
             characterSheet: {
                 meta: {
                     version: '1.0',
@@ -60,27 +68,52 @@ const app = createApp({
                     ]
                 }
             },
+            /** @type {boolean} Controls visibility of the Add/Edit Ability Modal */
             showAddEditAbilityModal: false,
+            /** @type {Object|null} The ability currently being edited */
             editingAbility: null,
+            /** @type {string} Current navigation page identifier */
             currentPage: 'home',
+            /** @type {string} Error message related to profile image upload */
             profileImageError: '',
+            /** @type {boolean} Flag indicating if an image is being processed */
             isProcessingImage: false
         };
     },
     computed: {
+        /**
+         * Calculates the health percentage.
+         * @returns {number} Percentage (0-100).
+         */
         healthPercentage() {
             if (this.characterSheet.hero.health.max === 0) return 0;
             return (this.characterSheet.hero.health.current / this.characterSheet.hero.health.max) * 100;
         },
+        /**
+         * Returns the list of abilities to display.
+         * @returns {Array<Object>} List of abilities.
+         */
         displayedAbilities() {
             return this.characterSheet.hero.abilities;
         },
+        /**
+         * Filters abilities for the Green zone.
+         * @returns {Array<Object>} Green zone abilities.
+         */
         abilitiesGreen() {
             return this.characterSheet.hero.abilities.filter(a => a.zone === 'green');
         },
+        /**
+         * Filters abilities for the Yellow zone.
+         * @returns {Array<Object>} Yellow zone abilities.
+         */
         abilitiesYellow() {
             return this.characterSheet.hero.abilities.filter(a => a.zone === 'yellow');
         },
+        /**
+         * Filters abilities for the Red zone.
+         * @returns {Array<Object>} Red zone abilities.
+         */
         abilitiesRed() {
             return this.characterSheet.hero.abilities.filter(a => a.zone === 'red');
         }
@@ -89,6 +122,10 @@ const app = createApp({
         this.loadSettings();
     },
     methods: {
+        /**
+         * Returns a status message based on current health percentage.
+         * @returns {string} Status message.
+         */
         getStatusMessage() {
             const pct = this.healthPercentage;
             if (pct >= 75) return "READY FOR ACTION!";
@@ -96,21 +133,38 @@ const app = createApp({
             if (pct >= 1) return "I NEED BACKUP!";
             return "DOWN FOR THE COUNT!";
         },
+        /**
+         * Changes the current health by a specified amount.
+         * @param {number} amount - The amount to change health by.
+         */
         changeHealth(amount) {
             const newHealth = this.characterSheet.hero.health.current + amount;
             if (newHealth >= 0 && newHealth <= this.characterSheet.hero.health.max) {
                 this.characterSheet.hero.health.current = newHealth;
             }
         },
+        /**
+         * Changes the current hero points by a specified amount.
+         * @param {number} amount - The amount to change hero points by.
+         */
         changeHeroPoints(amount) {
             const newHeroPoints = this.characterSheet.hero.heroPoints.current + amount;
             if (newHeroPoints >= 0 && newHeroPoints <= this.characterSheet.hero.heroPoints.max) {
                 this.characterSheet.hero.heroPoints.current = newHeroPoints;
             }
         },
+        /**
+         * Changes the global modifier by a specified amount.
+         * @param {number} amount - The amount to change the modifier by.
+         */
         changeModifier(amount) {
             this.characterSheet.hero.modifier.current += amount;
         },
+        /**
+         * Returns the CSS class for a health bar segment.
+         * @param {number} segmentNumber - The index of the segment.
+         * @returns {string} CSS class name.
+         */
         getSegmentClass(segmentNumber) {
             const pct = this.healthPercentage;
             const segmentThreshold = segmentNumber * 10;
@@ -123,17 +177,31 @@ const app = createApp({
             if (segmentNumber >= 3) return 'filled-yellow';
             return 'filled-red';
         },
+        /**
+         * Opens the modal to add a new ability.
+         */
         openAddAbilityModal() {
             this.editingAbility = null;
             this.showAddEditAbilityModal = true;
         },
+        /**
+         * Opens the modal to edit an existing ability.
+         * @param {Object} ability - The ability to edit.
+         */
         openEditAbilityModal(ability) {
             this.editingAbility = ability;
             this.showAddEditAbilityModal = true;
         },
+        /**
+         * Closes the ability add/edit modal.
+         */
         closeAddEditAbilityModal() {
             this.showAddEditAbilityModal = false;
         },
+        /**
+         * Saves an ability (add or update).
+         * @param {Object} abilityData - The ability data to save.
+         */
         saveAbility(abilityData) {
             const { id, name, zone, text, traitId, actions, interactionType } = abilityData;
             const abilityIndex = this.characterSheet.hero.abilities.findIndex(a => a.id === id);
@@ -155,10 +223,18 @@ const app = createApp({
             }
             this.closeAddEditAbilityModal();
         },
+        /**
+         * Deletes an ability.
+         * @param {Object} abilityIdentifier - Object containing the ID of the ability to delete.
+         */
         deleteAbility(abilityIdentifier) {
             const abilityId = abilityIdentifier.id;
             this.characterSheet.hero.abilities = this.characterSheet.hero.abilities.filter(a => a.id !== abilityId);
         },
+        /**
+         * Determines the current gyro status (zone) based on health.
+         * @returns {string} 'green', 'yellow', 'red', or 'out'.
+         */
         getGyroStatus() {
             const health = this.characterSheet.hero.health;
             const ranges = health.ranges;
@@ -167,6 +243,11 @@ const app = createApp({
             if (health.current >= ranges.redMin) return 'red';
             return 'out';
         },
+        /**
+         * Checks if an ability is available based on current health status.
+         * @param {Object} ability - The ability to check.
+         * @returns {boolean} True if available.
+         */
         isAbilityAvailable(ability) {
             const gyro = this.getGyroStatus();
             switch (gyro) {
@@ -182,15 +263,27 @@ const app = createApp({
                     return false;
             }
         },
+        /**
+         * Sets the current navigation page.
+         * @param {string} page - The page identifier.
+         */
         setPage(page) {
             this.currentPage = page;
         },
+        /**
+         * Updates the health range thresholds based on max health.
+         */
         updateHealthRanges() {
             const max = this.characterSheet.hero.health.max;
             this.characterSheet.hero.health.ranges.greenMin = Math.floor(max * 0.75);
             this.characterSheet.hero.health.ranges.yellowMin = Math.floor(max * 0.35);
             this.characterSheet.hero.health.ranges.redMin = 1;
         },
+        /**
+         * Handles the profile image file upload event.
+         * Processes, resizes, and saves the image as a Data URL.
+         * @param {Event} event - The input change event.
+         */
         async handleProfileImageUpload(event) {
             const file = event.target.files && event.target.files[0];
             if (!file) return;
@@ -214,7 +307,13 @@ const app = createApp({
                 this.isProcessingImage = false;
             }
         },
-        // Resize an image file into a JPEG Data URL, constraining longest side to maxDim
+        /**
+         * Resizes an image file into a JPEG Data URL.
+         * @param {File} file - The image file.
+         * @param {number} [maxDim=512] - The maximum dimension (width or height).
+         * @param {number} [quality=0.8] - The JPEG quality (0.0 to 1.0).
+         * @returns {Promise<string>} A promise resolving to the Data URL.
+         */
         resizeImageFile(file, maxDim = 512, quality = 0.8) {
             return new Promise((resolve, reject) => {
                 const fr = new FileReader();
@@ -266,11 +365,17 @@ const app = createApp({
                 fr.readAsDataURL(file);
             });
         },
+        /**
+         * Clears the current profile image.
+         */
         clearProfileImage() {
             this.characterSheet.hero.profileImage = null;
             this.profileImageError = '';
         },
 
+        /**
+         * Saves the current settings to localStorage.
+         */
         saveSettings() {
             this.updateHealthRanges();
             try {
@@ -281,6 +386,10 @@ const app = createApp({
                 alert('Error saving settings');
             }
         },
+        /**
+         * Loads settings from localStorage and merges with default state.
+         * Handles data migration if necessary.
+         */
         loadSettings() {
             try {
                 const saved = localStorage.getItem('hero-character');

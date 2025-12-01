@@ -1,5 +1,16 @@
+/**
+ * Component representing the Dice Page.
+ * Handles dice selection, rolling, and result display with modifiers.
+ * @component
+ */
 app.component('dice-page', {
-    props: ['hero'],
+    props: {
+        /**
+         * The hero object (not currently used in logic but available).
+         * @type {Object}
+         */
+        hero: Object
+    },
     template: `
     <div class="dice-page pb-nav">
         <!-- Dice Tray Header -->
@@ -103,48 +114,85 @@ app.component('dice-page', {
     `,
     data() {
         return {
+            /** @type {number[]} Currently selected dice sizes */
             selectedDice: [6, 8, 10], // Default dice
+            /** @type {number[]} Available die sizes to choose from */
             availableDice: [4, 6, 8, 10, 12],
+            /** @type {number|null} Index of the currently active die slot for selection */
             activeSlot: null,
+            /** @type {boolean} Whether the die selector modal is shown */
             showDieSelector: false,
+            /** @type {Object|null} Results of the last roll */
             rollResults: null,
+            /** @type {boolean} Whether dice are currently "rolling" */
             isRolling: false,
+            /** @type {string|null} Text to display for impact effect */
             impactText: null,
+            /** @type {Array<Object>} List of modifiers */
             modifiers: [], // { id, name, value, type, active }
+            /** @type {string} Name input for new modifier */
             newModName: '',
+            /** @type {number} Value input for new modifier */
             newModValue: 1,
+            /** @type {string} Type input for new modifier ('temporary' or 'persistent') */
             newModType: 'temporary'
         };
     },
     computed: {
+        /**
+         * Calculates the total value of active modifiers.
+         * @returns {number} The total modifier value.
+         */
         totalModifier() {
             return this.modifiers
                 .filter(m => m.active)
                 .reduce((sum, m) => sum + m.value, 0);
         },
+        /**
+         * Calculates the final Mid value (Effect die + modifiers).
+         * @returns {number|string} The calculated value or '-' if no roll.
+         */
         finalMidValue() {
             if (!this.rollResults) return '-';
             return this.rollResults.mid + this.totalModifier;
         },
+        /**
+         * Checks if there are any active temporary modifiers.
+         * @returns {boolean} True if any active temporary modifiers exist.
+         */
         hasTemporaryActive() {
             return this.modifiers.some(m => m.active && m.type === 'temporary');
         }
     },
     methods: {
+        /**
+         * Opens the die selector for a specific slot.
+         * @param {number} index - The index of the die slot.
+         */
         openDieSelector(index) {
             this.activeSlot = index;
             this.showDieSelector = true;
         },
+        /**
+         * Closes the die selector.
+         */
         closeDieSelector() {
             this.showDieSelector = false;
             this.activeSlot = null;
         },
+        /**
+         * Selects a die size for the active slot.
+         * @param {number} size - The size of the die (e.g., 6).
+         */
         selectDie(size) {
             if (this.activeSlot !== null) {
                 this.selectedDice[this.activeSlot] = size;
             }
             this.closeDieSelector();
         },
+        /**
+         * Initiates the dice roll animation and calculation.
+         */
         rollDice() {
             if (this.isRolling) return;
 
@@ -175,6 +223,10 @@ app.component('dice-page', {
 
             }, 800);
         },
+        /**
+         * Determines the impact text based on the max die roll.
+         * @param {number} maxValue - The highest value rolled.
+         */
         determineImpactText(maxValue) {
             const impacts = [
                 { text: 'ZAP!', threshold: 0, color: 'var(--color-cyan)' },
@@ -192,6 +244,9 @@ app.component('dice-page', {
                 this.impactText = null;
             }, 1500);
         },
+        /**
+         * Adds a new modifier to the list.
+         */
         addModifier() {
             if (!this.newModName) return;
             this.modifiers.push({
@@ -204,12 +259,23 @@ app.component('dice-page', {
             this.newModName = '';
             this.newModValue = 1;
         },
+        /**
+         * Toggles the active state of a modifier.
+         * @param {Object} mod - The modifier object.
+         */
         toggleModifier(mod) {
             mod.active = !mod.active;
         },
+        /**
+         * Removes a modifier from the list.
+         * @param {number} id - The ID of the modifier to remove.
+         */
         removeModifier(id) {
             this.modifiers = this.modifiers.filter(m => m.id !== id);
         },
+        /**
+         * Clears all active temporary modifiers.
+         */
         clearUsedModifiers() {
             // Remove active temporary modifiers
             // Or just deactivate them? "disappear after you use them" suggests removal.

@@ -1,13 +1,40 @@
+/**
+ * Component for adding or editing a trait (Power or Quality).
+ * @component
+ */
 app.component('add-edit-trait-modal', {
-    props: ['trait', 'type', 'show'],
+    props: {
+        /**
+         * The trait to edit (if any). Null for adding.
+         * @type {Object|null}
+         */
+        trait: Object,
+        /**
+         * The type of trait ('Power' or 'Quality').
+         * @type {string}
+         */
+        type: String,
+        /**
+         * Whether the modal is visible.
+         * @type {boolean}
+         */
+        show: Boolean
+    },
     data() {
         return {
+            /** @type {string} ID of the trait */
             id: '',
+            /** @type {string} Name of the trait */
             name: '',
+            /** @type {number} Die size (e.g., 4, 6, 8, 10, 12) */
             die: 6
         };
     },
     watch: {
+        /**
+         * Watcher for the 'trait' prop to populate form data on edit.
+         * @param {Object|null} newVal - The new trait object or null.
+         */
         trait: {
             handler(newVal) {
                 if (newVal) {
@@ -54,6 +81,9 @@ app.component('add-edit-trait-modal', {
         </div>
     `,
     methods: {
+        /**
+         * Emits the 'save' event with the trait data.
+         */
         handleSubmit() {
             this.$emit('save', {
                 id: this.id,
@@ -61,6 +91,9 @@ app.component('add-edit-trait-modal', {
                 die: this.die
             });
         },
+        /**
+         * Emits the 'delete' event for the current trait.
+         */
         handleDelete() {
             this.$emit('delete', { id: this.id });
             this.$emit('close');

@@ -1,5 +1,14 @@
 // Service Worker for PWA offline support
+/**
+ * The name of the cache for the application resources.
+ * @type {string}
+ */
 const CACHE_NAME = 'hero-tracker-v1';
+
+/**
+ * List of URLs to cache for offline access.
+ * @type {string[]}
+ */
 const urlsToCache = [
     '/',
     '/index.html',
@@ -17,7 +26,11 @@ const urlsToCache = [
     'https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:wght@400;700&display=swap'
 ];
 
-// Install event - cache resources
+/**
+ * Event listener for the 'install' event.
+ * Caches the specified resources.
+ * @param {ExtendableEvent} event - The install event.
+ */
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open(CACHE_NAME)
@@ -28,7 +41,12 @@ self.addEventListener('install', (event) => {
     );
 });
 
-// Fetch event - serve from cache, fallback to network
+/**
+ * Event listener for the 'fetch' event.
+ * Serves resources from cache if available, otherwise fetches from network.
+ * Also caches new requests.
+ * @param {FetchEvent} event - The fetch event.
+ */
 self.addEventListener('fetch', (event) => {
     event.respondWith(
         caches.match(event.request)
@@ -61,7 +79,11 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Activate event - clean up old caches
+/**
+ * Event listener for the 'activate' event.
+ * Cleans up old caches that are not in the whitelist.
+ * @param {ExtendableEvent} event - The activate event.
+ */
 self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME];
 
