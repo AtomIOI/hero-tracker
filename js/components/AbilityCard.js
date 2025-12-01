@@ -15,13 +15,15 @@ app.component('ability-card', {
          */
         hero: Object
     },
-    emits: ['edit'],
+    emits: ['edit', 'use'],
     data() {
         return {
             /** @type {number|null} Timer ID for long press detection */
             longPressTimer: null,
             /** @type {boolean} Flag indicating if a long press occurred */
-            isLongPress: false
+            isLongPress: false,
+            /** @type {number} Timestamp of the last interaction start */
+            lastTapTime: 0
         };
     },
     computed: {
@@ -79,9 +81,20 @@ app.component('ability-card', {
     },
     methods: {
         /**
-         * Starts the timer for detecting a long press interaction.
+         * Handles interaction start (mouse down or touch start).
+         * Detects double taps and starts long press timer.
          */
-        startLongPress() {
+        handleInteractionStart() {
+            const now = Date.now();
+            if (now - this.lastTapTime < 300) {
+                // Double Tap Detected
+                this.$emit('use', this.ability);
+                this.lastTapTime = 0; // Reset to prevent triple-tap firing
+                this.cancelLongPress(); // Ensure long press doesn't fire
+                return;
+            }
+
+            this.lastTapTime = now;
             this.isLongPress = false;
             this.longPressTimer = setTimeout(() => {
                 this.isLongPress = true;
@@ -101,8 +114,8 @@ app.component('ability-card', {
     template: `
         <div class="ability-card no-select relative"
              :class="['bg-' + ability.zone]"
-             @mousedown="startLongPress"
-             @touchstart="startLongPress"
+             @mousedown="handleInteractionStart"
+             @touchstart="handleInteractionStart"
              @mouseup="cancelLongPress"
              @touchend="cancelLongPress"
              @mouseleave="cancelLongPress"
