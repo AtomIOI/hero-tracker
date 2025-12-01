@@ -1,13 +1,34 @@
+/**
+ * Component representing a single ability card.
+ * @component
+ */
 app.component('ability-card', {
-    props: ['ability', 'hero'],
+    props: {
+        /**
+         * The ability object to display.
+         * @type {Object}
+         */
+        ability: Object,
+        /**
+         * The hero object, containing powers and qualities.
+         * @type {Object}
+         */
+        hero: Object
+    },
     emits: ['edit'],
     data() {
         return {
+            /** @type {number|null} Timer ID for long press detection */
             longPressTimer: null,
+            /** @type {boolean} Flag indicating if a long press occurred */
             isLongPress: false
         };
     },
     computed: {
+        /**
+         * Finds the trait (Power or Quality) linked to this ability.
+         * @returns {Object|null} The linked trait object or null if not found.
+         */
         linkedTrait() {
             if (!this.ability.traitId || !this.hero) return null;
             const powers = this.hero.powers || [];
@@ -15,10 +36,18 @@ app.component('ability-card', {
             return powers.find(p => p.id === this.ability.traitId) ||
                    qualities.find(q => q.id === this.ability.traitId);
         },
+        /**
+         * Generates the label for the linked trait.
+         * @returns {string} The formatted label string.
+         */
         traitLabel() {
             const t = this.linkedTrait;
             return t ? `${t.name} (d${t.die})` : 'No Trait Linked';
         },
+        /**
+         * Returns the display label for the interaction type.
+         * @returns {string} 'ACTION', 'REACTION', or 'INHERENT'.
+         */
         interactionLabel() {
             const map = {
                 'action': 'ACTION',
@@ -27,6 +56,10 @@ app.component('ability-card', {
             };
             return map[this.ability.interactionType] || 'ACTION';
         },
+        /**
+         * Returns the CSS class for the interaction type text color.
+         * @returns {string} The CSS class name.
+         */
         interactionClass() {
              const map = {
                 'action': 'text-cyan',
@@ -35,12 +68,19 @@ app.component('ability-card', {
             };
             return map[this.ability.interactionType] || 'text-cyan';
         },
+        /**
+         * Returns the list of icon objects for the ability's basic actions.
+         * @returns {Array<{label: string, svg: string}>} Array of icon objects.
+         */
         basicActionIcons() {
             if (!this.ability.actions || !window.ABILITY_ICONS) return [];
             return this.ability.actions.map(key => window.ABILITY_ICONS[key]).filter(Boolean);
         }
     },
     methods: {
+        /**
+         * Starts the timer for detecting a long press interaction.
+         */
         startLongPress() {
             this.isLongPress = false;
             this.longPressTimer = setTimeout(() => {
@@ -48,6 +88,9 @@ app.component('ability-card', {
                 this.$emit('edit', this.ability);
             }, 600);
         },
+        /**
+         * Cancels the long press timer if the interaction ends early.
+         */
         cancelLongPress() {
             if (this.longPressTimer) {
                 clearTimeout(this.longPressTimer);

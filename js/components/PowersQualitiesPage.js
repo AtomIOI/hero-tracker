@@ -1,16 +1,38 @@
+/**
+ * Component representing the Powers & Qualities Page.
+ * Displays lists of powers and qualities, allowing addition, editing, and deletion.
+ * @component
+ */
 app.component('powers-qualities-page', {
-    props: ['hero'],
+    props: {
+        /**
+         * The hero object containing powers and qualities.
+         * @type {Object}
+         */
+        hero: Object
+    },
     data() {
         return {
+            /** @type {string} Currently active tab ('powers' or 'qualities') */
             activeTab: 'powers', // 'powers' or 'qualities'
+            /** @type {boolean} Whether the add/edit modal is visible */
             showModal: false,
+            /** @type {Object|null} The trait being edited, or null for new */
             editingTrait: null
         };
     },
     computed: {
+        /**
+         * Returns the list of traits for the active tab.
+         * @returns {Array<Object>} List of powers or qualities.
+         */
         displayedTraits() {
             return this.activeTab === 'powers' ? this.hero.powers : this.hero.qualities;
         },
+        /**
+         * Returns the label for the current trait type.
+         * @returns {string} 'Power' or 'Quality'.
+         */
         currentTypeLabel() {
             return this.activeTab === 'powers' ? 'Power' : 'Quality';
         }
@@ -65,17 +87,31 @@ app.component('powers-qualities-page', {
         </div>
     `,
     methods: {
+        /**
+         * Opens the modal for adding a new trait.
+         */
         openAddModal() {
             this.editingTrait = null;
             this.showModal = true;
         },
+        /**
+         * Opens the modal for editing an existing trait.
+         * @param {Object} trait - The trait to edit.
+         */
         openEditModal(trait) {
             this.editingTrait = trait;
             this.showModal = true;
         },
+        /**
+         * Closes the modal.
+         */
         closeModal() {
             this.showModal = false;
         },
+        /**
+         * Saves a trait (add or update).
+         * @param {Object} traitData - The trait data to save.
+         */
         saveTrait(traitData) {
             const list = this.activeTab === 'powers' ? this.hero.powers : this.hero.qualities;
             const { id, name, die } = traitData;
@@ -94,6 +130,10 @@ app.component('powers-qualities-page', {
             }
             this.closeModal();
         },
+        /**
+         * Deletes a trait.
+         * @param {Object} traitIdentifier - Object containing the ID of the trait to delete.
+         */
         deleteTrait(traitIdentifier) {
             const list = this.activeTab === 'powers' ? this.hero.powers : this.hero.qualities;
             const index = list.findIndex(t => t.id === traitIdentifier.id);

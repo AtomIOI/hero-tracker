@@ -1,35 +1,82 @@
+/**
+ * Component for adding or editing an ability.
+ * @component
+ */
 app.component('add-edit-ability-modal', {
-    props: ['ability', 'show', 'hero'],
+    props: {
+        /**
+         * The ability to edit (if any). Null for adding.
+         * @type {Object|null}
+         */
+        ability: Object,
+        /**
+         * Whether the modal is visible.
+         * @type {boolean}
+         */
+        show: Boolean,
+        /**
+         * The hero object, used to populate trait dropdowns.
+         * @type {Object}
+         */
+        hero: Object
+    },
     emits: ['save', 'delete', 'close'],
     data() {
         return {
+            /** @type {string} ID of the ability */
             id: '',
+            /** @type {string} Name of the ability */
             name: '',
+            /** @type {string} Zone of the ability (green, yellow, red) */
             zone: 'green',
+            /** @type {string} Description text of the ability */
             text: '',
-            traitId: '', // ID of the linked Power or Quality
-            actions: [], // Array of strings: ['attack', 'boost', ...]
-            interactionType: 'action' // 'action', 'reaction', 'inherent'
+            /** @type {string} ID of the linked Power or Quality */
+            traitId: '',
+            /** @type {string[]} Array of selected action keys (e.g. ['attack', 'boost']) */
+            actions: [],
+            /** @type {string} Interaction type ('action', 'reaction', 'inherent') */
+            interactionType: 'action'
         };
     },
     computed: {
+        /**
+         * Returns all available action types defined in global config.
+         * @returns {Array<Object>} List of action type objects with key and SVG.
+         */
         actionTypes() {
             return Object.keys(window.ABILITY_ICONS).map(key => ({
                 key,
                 ...window.ABILITY_ICONS[key]
             }));
         },
+        /**
+         * Returns the list of hero's powers.
+         * @returns {Array<Object>} Array of power objects.
+         */
         powers() {
             return this.hero ? this.hero.powers : [];
         },
+        /**
+         * Returns the list of hero's qualities.
+         * @returns {Array<Object>} Array of quality objects.
+         */
         qualities() {
             return this.hero ? this.hero.qualities : [];
         },
+        /**
+         * Checks if the hero has any traits (Powers or Qualities).
+         * @returns {boolean} True if any traits exist.
+         */
         hasTraits() {
             return (this.powers && this.powers.length > 0) || (this.qualities && this.qualities.length > 0);
         }
     },
     watch: {
+        /**
+         * Watcher for the 'ability' prop to populate form data on edit.
+         * @param {Object|null} newVal - The new ability object or null.
+         */
         ability: {
             handler(newVal) {
                 if (newVal) {
@@ -48,6 +95,9 @@ app.component('add-edit-ability-modal', {
         }
     },
     methods: {
+        /**
+         * Resets the form fields to default values.
+         */
         resetForm() {
             this.id = '';
             this.name = '';
@@ -57,6 +107,10 @@ app.component('add-edit-ability-modal', {
             this.actions = [];
             this.interactionType = 'action';
         },
+        /**
+         * Toggles the selection of a basic action.
+         * @param {string} actionKey - The key of the action (e.g., 'attack').
+         */
         toggleAction(actionKey) {
             const idx = this.actions.indexOf(actionKey);
             if (idx > -1) {
@@ -65,6 +119,9 @@ app.component('add-edit-ability-modal', {
                 this.actions.push(actionKey);
             }
         },
+        /**
+         * Emits the 'save' event with the form data.
+         */
         handleSubmit() {
             this.$emit('save', {
                 id: this.id,
@@ -76,6 +133,9 @@ app.component('add-edit-ability-modal', {
                 interactionType: this.interactionType
             });
         },
+        /**
+         * Emits the 'delete' event for the current ability.
+         */
         handleDelete() {
             this.$emit('delete', { id: this.id });
             this.$emit('close');

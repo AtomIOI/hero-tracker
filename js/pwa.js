@@ -1,11 +1,26 @@
-// PWA registration and utilities
+/**
+ * PWA registration and utilities manager.
+ * Handles service worker registration, installation prompts, wake locks, and sharing.
+ */
 class PWAManager {
+    /**
+     * Creates an instance of PWAManager.
+     */
     constructor() {
+        /**
+         * @type {Event|null} Stores the 'beforeinstallprompt' event.
+         */
         this.deferredPrompt = null;
+        /**
+         * @type {boolean} Indicates if the app is installed.
+         */
         this.isInstalled = false;
     }
 
-    // Register service worker
+    /**
+     * Registers the service worker.
+     * @returns {Promise<ServiceWorkerRegistration|null>} The service worker registration object or null if failed.
+     */
     async registerServiceWorker() {
         if ('serviceWorker' in navigator) {
             try {
@@ -20,7 +35,9 @@ class PWAManager {
         return null;
     }
 
-    // Setup install prompt
+    /**
+     * Sets up listeners for the PWA install prompt.
+     */
     setupInstallPrompt() {
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
@@ -35,7 +52,9 @@ class PWAManager {
         });
     }
 
-    // Show install button
+    /**
+     * Shows the install button in the UI.
+     */
     showInstallButton() {
         const installBtn = document.getElementById('install-button');
         if (installBtn) {
@@ -43,7 +62,9 @@ class PWAManager {
         }
     }
 
-    // Hide install button
+    /**
+     * Hides the install button in the UI.
+     */
     hideInstallButton() {
         const installBtn = document.getElementById('install-button');
         if (installBtn) {
@@ -51,7 +72,10 @@ class PWAManager {
         }
     }
 
-    // Prompt install
+    /**
+     * Triggers the browser's install prompt.
+     * @returns {Promise<boolean>} True if the user accepted the install, false otherwise.
+     */
     async promptInstall() {
         if (!this.deferredPrompt) {
             console.log('Install prompt not available');
@@ -66,14 +90,20 @@ class PWAManager {
         return outcome === 'accepted';
     }
 
-    // Haptic feedback (if supported)
+    /**
+     * Triggers haptic feedback if supported.
+     * @param {number|number[]} [pattern=50] - The vibration pattern.
+     */
     vibrate(pattern = 50) {
         if ('vibrate' in navigator) {
             navigator.vibrate(pattern);
         }
     }
 
-    // Screen wake lock
+    /**
+     * Requests a screen wake lock to keep the device awake.
+     * @returns {Promise<WakeLockSentinel|null>} The wake lock sentinel or null if failed.
+     */
     async requestWakeLock() {
         if ('wakeLock' in navigator) {
             try {
@@ -88,7 +118,11 @@ class PWAManager {
         return null;
     }
 
-    // Web Share API
+    /**
+     * Shares data using the Web Share API.
+     * @param {Object} data - The data to share (title, text, url).
+     * @returns {Promise<boolean>} True if shared successfully, false otherwise.
+     */
     async shareData(data) {
         if (navigator.share) {
             try {
