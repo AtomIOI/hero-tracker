@@ -58,14 +58,15 @@
 .health-section {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Horizontal layout */
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 1rem;
 }
 
 /* Embedded Controls */
 .health-section .health-bar-container {
-    width: 100%;
+    flex-grow: 1; /* Take up remaining space */
     height: auto;
     padding: 2px;
     display: flex;
@@ -73,6 +74,9 @@
     justify-content: space-between;
     gap: 4px;
     background: white;
+    border: 2px solid var(--color-ink);
+    border-radius: 4px;
+    box-shadow: 2px 2px 0px rgba(0,0,0,1);
 }
 
 .health-section .comic-btn {
@@ -316,7 +320,7 @@
     border: 2px solid var(--color-ink);
     border-radius: 4px;
     padding: 0.2rem 0.6rem;
-    margin-bottom: 4px; /* Space between text and bar */
+    margin-bottom: 0; /* Removed bottom margin */
     box-shadow: 2px 2px 0px rgba(0,0,0,1); /* Hard shadow */
     font-family: var(--font-heading);
     font-size: 1.4rem;
@@ -324,11 +328,12 @@
     color: var(--color-ink);
     line-height: 1;
     text-align: center;
-    min-width: 60px;
+    min-width: 80px; /* Increased slightly */
+    white-space: nowrap;
     z-index: 2; /* Pop over */
 }
 
 .health-section .health-bar-container {
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0;
 }
