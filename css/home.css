@@ -1,60 +1,66 @@
 /* Home Page Specific Styles */
 
-/* Compact Status Panel overrides */
-.status-panel.compact-status {
+/* Hero Header Card */
+.hero-header-card {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.5rem 0.5rem;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    padding: 1rem;
+    width: 100%;
 }
 
 /* Hero Identity Section */
 .hero-identity {
-    flex: 0 0 auto; /* Don't grow, don't shrink */
+    flex: 1;
     text-align: left;
-    margin-right: 0.5rem;
-    max-width: 30%; /* Prevent it from taking too much space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .hero-name {
     font-family: var(--font-heading);
-    font-size: 1.6rem;
+    font-size: 2rem;
     color: var(--color-ink);
-    margin: 0;
+    margin: 0 0 0.2rem 0;
     line-height: 1.1;
     text-transform: uppercase;
 }
 
 .hero-alias {
     font-family: var(--font-heading);
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: var(--color-ink);
     margin: 0;
     line-height: 1;
 }
 
 /* Portrait */
-.status-panel.compact-status .portrait-container {
-    margin-bottom: 0;
+.hero-header-card .portrait-container {
     flex: 0 0 auto;
 }
 
-.status-panel.compact-status .comic-portrait {
-    width: 60px;
-    height: 60px;
-    border-width: 2px;
+.hero-header-card .comic-portrait {
+    width: 100px;
+    height: 100px;
+    border-width: 3px;
+}
+
+/* Health Card */
+.health-card {
+    padding: 1rem;
+    width: 100%;
 }
 
 /* Health Section */
 .health-section {
-    flex: 1; /* Take remaining space */
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: flex-end; /* Right align content */
+    align-items: center;
     justify-content: center;
-    min-width: 120px; /* Minimum width for usability */
 }
 
 /* Embedded Controls */
@@ -322,64 +328,7 @@
     z-index: 2; /* Pop over */
 }
 
-/* Update Status Panel Layout - Large Portrait & Stacked Info */
-
-.status-panel.compact-status {
-    /* Ensure row layout but check spacing */
-    gap: 1rem;
-    padding: 0.75rem;
-}
-
-/* Portrait - Double Size */
-.status-panel.compact-status .portrait-container {
-    flex: 0 0 auto;
-    margin: 0;
-}
-
-.status-panel.compact-status .comic-portrait {
-    width: 120px;
-    height: 120px;
-    border-width: 4px; /* Thicker border for larger size */
-}
-
-/* Right Stack Column */
-.status-info-column {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly; /* Distribute vertical space */
-    align-items: center;
-    height: 120px; /* Match portrait height */
-}
-
-/* Identity Section Updates */
-.hero-identity {
-    flex: 0 0 auto;
-    width: 100%;
-    max-width: none;
-    margin-right: 0;
-    text-align: center;
-    /* Vertically center content */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.hero-name {
-    font-size: 2rem; /* Larger name */
-    margin-bottom: 0.2rem;
-}
-
-/* Health Section Updates */
-.health-section {
-    flex: 0 0 auto;
-    width: 100%; /* Full width of column */
-    align-items: center; /* Center horizontally */
-    min-width: 0; /* Reset */
-    margin-top: 0.2rem;
-}
-
 .health-section .health-bar-container {
-    max-width: 250px; /* Constrain width on wide screens */
-    margin: 0 auto; /* Center */
+    max-width: 100%;
+    margin: 0 auto;
 }
