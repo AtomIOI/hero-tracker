@@ -624,6 +624,21 @@
     border-radius: 5px;
 }
 
+.trait-die-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+}
+
+.trait-die-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.2));
+}
+
 .add-trait-btn {
     display: block;
     margin: 0 auto 1.5rem;
