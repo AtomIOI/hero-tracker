@@ -26,6 +26,9 @@ app.component('issue-modal', {
         },
         pastIssues() {
             return this.hero.issues.past;
+        },
+        pastIssuesCount() {
+            return this.hero.issues.past.filter(i => i && i.trim().length > 0).length;
         }
     },
     methods: {
@@ -158,19 +161,19 @@ app.component('issue-modal', {
                         <input type="text"
                                v-model="hero.issues.current"
                                class="w-full border-2 border-black p-2 font-comic text-xl rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] current-issue-input"
-                               placeholder="Enter Issue Name...">
+                               placeholder="#1">
                     </div>
 
                     <!-- Past Issues Section -->
                     <div class="mb-6">
-                        <div class="section-label mb-2">PAST ISSUES ({{ hero.issues.past.length }}/5)</div>
+                        <div class="section-label mb-2">PAST ISSUES ({{ pastIssuesCount }}/5)</div>
                         <div class="flex flex-col gap-3">
                             <div v-for="n in 5" :key="n" class="relative">
                                 <span class="absolute left-2 top-1/2 transform -translate-y-1/2 font-bangers text-gray-500">#{{ n }}</span>
                                 <input type="text"
                                        :value="hero.issues.past[n-1] || ''"
                                        @input="updatePastIssue(n-1, $event.target.value)"
-                                       class="w-full border-2 border-black p-2 pl-10 font-comic text-lg rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] past-issue-input"
+                                       class="w-full border-2 border-black p-2 pl-14 font-comic text-lg rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] past-issue-input"
                                        placeholder="Enter Past Issue...">
                             </div>
                         </div>
@@ -204,15 +207,16 @@ app.component('issue-modal', {
                                  @touchend="cancelCollectionPress"
                                  @mouseleave="cancelCollectionPress">
 
-                                <div class="flex justify-between items-center">
+                                <div class="flex justify-between items-center transition-colors p-1 rounded"
+                                     :class="{'bg-yellow-400 border-2 border-black border-dashed': expandedCollectionIndex === index}">
                                     <span class="font-bangers text-xl tracking-wide">{{ collection.name }}</span>
                                     <span class="font-comic text-sm bg-black text-white px-2 rounded-full">{{ collection.issues.length }}</span>
                                 </div>
 
                                 <!-- Expanded View -->
-                                <div v-if="expandedCollectionIndex === index" class="mt-3 pt-2 border-t-2 border-black/10">
-                                    <ul class="list-disc list-inside font-comic text-sm">
-                                        <li v-for="(issue, i) in collection.issues" :key="i">{{ issue }}</li>
+                                <div v-if="expandedCollectionIndex === index" class="mt-3 pt-2 border-t-2 border-black/10 text-center">
+                                    <ul class="list-none font-comic text-sm inline-block text-left">
+                                        <li v-for="(issue, i) in collection.issues" :key="i" class="mb-1">{{ issue }}</li>
                                     </ul>
                                 </div>
                             </div>
