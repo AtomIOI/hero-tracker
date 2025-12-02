@@ -22,11 +22,7 @@ app.component('issue-modal', {
     computed: {
         canCreateCollection() {
             // Check if there are exactly 5 non-empty past issues
-            // (Requirement says "There can only be 5 Past Issues before the user has to make a collection")
-            // And presumably we only want to collect if they are filled out.
-            // But prompt says "available when there are exactly 5 past issues".
-            // Since we enforce 5 slots, let's check if the array has 5 items.
-            return this.hero.issues.past.length === 5;
+            return this.hero.issues.past.filter(issue => issue && issue.trim() !== '').length === 5;
         },
         pastIssues() {
             return this.hero.issues.past;
@@ -34,12 +30,24 @@ app.component('issue-modal', {
     },
     methods: {
         close() {
+            // Try to trigger a save if the app has a save method, but since we are modifying props (objects),
+            // changes are reflected in parent. Parent (App.js) handles persistence usually.
+            // Ideally we'd emit a save event, but simply closing implies done.
+            // App.js typically autosaves or has a manual save. The prompt asks for a "Save" button to reassure user.
+            // We can call window.vm.saveSettings() if available, or just close.
+            // Let's rely on the user clicking "Save" which calls close, or "Exit".
             this.$emit('close');
             // Reset local state
             this.collectionName = '';
             this.expandedCollectionIndex = -1;
             this.editingCollectionIndex = -1;
             this.confirmDelete = false;
+        },
+        saveAndClose() {
+             if (window.vm && window.vm.saveSettings) {
+                 window.vm.saveSettings();
+             }
+             this.close();
         },
         updatePastIssue(index, value) {
             // Ensure the array has enough elements
@@ -149,8 +157,8 @@ app.component('issue-modal', {
                         <div class="section-label mb-2">CURRENT ISSUE</div>
                         <input type="text"
                                v-model="hero.issues.current"
-                               class="w-full border-2 border-black p-2 font-comic text-xl rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] uppercase current-issue-input"
-                               placeholder="ENTER ISSUE NAME...">
+                               class="w-full border-2 border-black p-2 font-comic text-xl rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] current-issue-input"
+                               placeholder="Enter Issue Name...">
                     </div>
 
                     <!-- Past Issues Section -->
@@ -163,7 +171,7 @@ app.component('issue-modal', {
                                        :value="hero.issues.past[n-1] || ''"
                                        @input="updatePastIssue(n-1, $event.target.value)"
                                        class="w-full border-2 border-black p-2 pl-10 font-comic text-lg rounded shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] past-issue-input"
-                                       :placeholder="'Past Issue ' + n">
+                                       placeholder="Enter Past Issue...">
                             </div>
                         </div>
                     </div>
@@ -211,7 +219,10 @@ app.component('issue-modal', {
                         </div>
                     </div>
 
-                    <button class="absolute top-2 right-2 text-2xl font-bold font-comic hover:text-red-600 z-50" @click="close">X</button>
+                    <div class="flex justify-end gap-4 mt-6">
+                        <button class="comic-btn bg-red text-white" @click="close">EXIT</button>
+                        <button class="comic-btn primary" @click="saveAndClose">SAVE</button>
+                    </div>
                 </div>
             </div>
 
