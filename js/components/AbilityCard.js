@@ -73,6 +73,21 @@ app.component('ability-card', {
             return map[this.ability.interactionType] || 'text-cyan';
         },
         /**
+         * Returns the CSS class for the background based on zone.
+         * Handles capitalization differences and mapping.
+         * @returns {string} The CSS class name.
+         */
+        zoneClass() {
+            if (!this.ability.zone) return 'bg-gray-100';
+            const zone = this.ability.zone.toLowerCase();
+            const map = {
+                'green': 'bg-green-500',
+                'yellow': 'bg-yellow-400',
+                'red': 'bg-red-600' // Mapping Red to Magenta/Red as per CSS
+            };
+            return map[zone] || 'bg-gray-100';
+        },
+        /**
          * Returns the list of icon objects for the ability's basic actions.
          * @returns {Array<{label: string, svg: string}>} Array of icon objects.
          */
@@ -125,8 +140,8 @@ app.component('ability-card', {
         }
     },
     template: `
-        <div class="ability-card no-select relative"
-             :class="['bg-' + ability.zone]"
+        <div class="ability-card wobbly-box no-select relative p-2"
+             :class="[zoneClass]"
              style="touch-action: manipulation;"
              @mousedown="handleInteractionStart"
              @touchstart="handleInteractionStart"
