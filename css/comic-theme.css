@@ -391,8 +391,8 @@ h1, h2, h3, h4, .comic-title {
     margin-bottom: 1rem;
 }
 
-.purple-tabs .comic-tab {
-    color: var(--comic-purple);
+.comic-btn.purple {
+    background-color: var(--comic-purple);
 }
 
 /* --- COMPONENT: FORM DICE SELECTOR --- */

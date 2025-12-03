@@ -43,7 +43,7 @@ app.component('powers-qualities-page', {
                 <h1 class="comic-title">POWERS/QUALITIES</h1>
             </div>
 
-            <div class="tabs-container purple-tabs">
+            <div class="tabs-container">
                 <button
                     class="comic-tab"
                     :class="{ active: activeTab === 'powers' }"
@@ -58,7 +58,7 @@ app.component('powers-qualities-page', {
                 </button>
             </div>
 
-            <button class="comic-btn plus add-trait-btn" @click="openAddModal">
+            <button class="comic-btn plus purple add-trait-btn" @click="openAddModal">
                 Add New {{ currentTypeLabel }}
             </button>
 
