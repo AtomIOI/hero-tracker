@@ -146,8 +146,8 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Current Issue Section -->
-                    <div class="mb-6 relative mt-6">
-                        <div class="section-label mb-2">CURRENT ISSUE</div>
+                    <div class="mb-6">
+                        <h3 class="font-bangers text-xl mb-1">CURRENT ISSUE</h3>
                         <input type="text"
                                v-model="hero.issues.current"
                                class="w-full border-2 border-black p-2 font-comic text-xl rounded shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] current-issue-input"
@@ -155,8 +155,8 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Past Issues Section -->
-                    <div class="mb-6 relative mt-6">
-                        <div class="section-label mb-2">PAST ISSUES ({{ pastIssuesCount }}/5)</div>
+                    <div class="mb-6">
+                        <h3 class="font-bangers text-xl mb-1">PAST ISSUES ({{ pastIssuesCount }}/5)</h3>
                         <div class="flex flex-col gap-3">
                             <div v-for="n in 5" :key="n" class="relative">
                                 <!-- UPDATED: Using inline styles for positioning -->
@@ -186,8 +186,8 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Collections Section -->
-                    <div class="mb-4 relative mt-6">
-                        <div class="section-label mb-2">COLLECTIONS</div>
+                    <div class="mb-4">
+                        <h3 class="font-bangers text-xl mb-1">COLLECTIONS</h3>
                         <div v-if="hero.issues.collections.length === 0" class="text-center font-comic italic text-gray-500">
                             No collections yet.
                         </div>
@@ -236,8 +236,8 @@ app.component('issue-modal', {
 
             <!-- Edit Collection Modal (Nested) -->
              <div v-if="editingCollectionIndex > -1" class="modal-overlay z-50" @click.self="cancelCollectionEdit">
-                <div class="modal-content wobbly-box bg-white relative mt-8">
-                    <div class="section-label mb-4 bg-yellow-400">EDIT COLLECTION</div>
+                <div class="modal-content wobbly-box bg-white relative">
+                    <h3 class="font-bangers text-2xl mb-4 text-center bg-yellow-400 border-2 border-black p-2 rounded">EDIT COLLECTION</h3>
 
                     <div class="mb-4">
                         <label class="block font-bangers mb-1">NAME</label>
