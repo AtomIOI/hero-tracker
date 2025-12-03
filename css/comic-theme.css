@@ -350,9 +350,9 @@ h1, h2, h3, h4, .comic-title {
 
 .tabs-container {
     display: flex;
+    justify-content: center;
     border-bottom: var(--border-thick);
     margin-bottom: 1rem;
-    padding-left: 1rem;
 }
 
 /* --- COMPONENT: FORM DICE SELECTOR --- */
