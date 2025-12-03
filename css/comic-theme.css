@@ -354,3 +354,38 @@ h1, h2, h3, h4, .comic-title {
     margin-bottom: 1rem;
     padding-left: 1rem;
 }
+
+/* --- COMPONENT: FORM DICE SELECTOR --- */
+.dice-selector {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.form-die-option {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.form-die-option:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.form-die-option.selected {
+    opacity: 1;
+    border-color: var(--color-magenta);
+    background-color: var(--comic-yellow);
+    box-shadow: 0 0 10px var(--color-magenta);
+    transform: scale(1.2);
+}
+
+.form-die-option img {
+    display: block;
+    /* Dimensions handled by .trait-die-icon */
+}

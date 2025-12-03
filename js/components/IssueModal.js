@@ -146,7 +146,7 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Current Issue Section -->
-                    <div class="mb-6 relative mt-4">
+                    <div class="mb-6 relative mt-6">
                         <div class="section-label mb-2">CURRENT ISSUE</div>
                         <input type="text"
                                v-model="hero.issues.current"
@@ -155,7 +155,7 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Past Issues Section -->
-                    <div class="mb-6 relative mt-4">
+                    <div class="mb-6 relative mt-6">
                         <div class="section-label mb-2">PAST ISSUES ({{ pastIssuesCount }}/5)</div>
                         <div class="flex flex-col gap-3">
                             <div v-for="n in 5" :key="n" class="relative">
@@ -186,7 +186,7 @@ app.component('issue-modal', {
                     </div>
 
                     <!-- Collections Section -->
-                    <div class="mb-4 relative mt-4">
+                    <div class="mb-4 relative mt-6">
                         <div class="section-label mb-2">COLLECTIONS</div>
                         <div v-if="hero.issues.collections.length === 0" class="text-center font-comic italic text-gray-500">
                             No collections yet.
@@ -236,7 +236,7 @@ app.component('issue-modal', {
 
             <!-- Edit Collection Modal (Nested) -->
              <div v-if="editingCollectionIndex > -1" class="modal-overlay z-50" @click.self="cancelCollectionEdit">
-                <div class="modal-content wobbly-box bg-white relative mt-4">
+                <div class="modal-content wobbly-box bg-white relative mt-8">
                     <div class="section-label mb-4 bg-yellow-400">EDIT COLLECTION</div>
 
                     <div class="mb-4">
