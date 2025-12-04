@@ -35,7 +35,7 @@ app.component('hero-points-modal', {
                     <div class="flex items-center justify-center gap-6 mb-8">
                         <button class="comic-btn minus" @click="changePoints(-1)" style="width: 50px; height: 50px; font-size: 2rem;">-</button>
 
-                        <div class="font-bangers relative z-10" style="font-size: 4rem; text-shadow: 3px 3px 0px var(--comic-yellow); -webkit-text-stroke: 2px black; color: black;">
+                        <div class="font-bangers relative z-10 mx-6" style="font-size: 4rem; text-shadow: 3px 3px 0px var(--comic-yellow); -webkit-text-stroke: 2px black; color: black;">
                             {{ hero.heroPoints.current }}
                         </div>
 
