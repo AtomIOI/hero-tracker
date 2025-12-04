@@ -241,7 +241,7 @@ app.component('ability-card', {
                 <!-- Header -->
                 <div class="ability-card-header pattern-dots flex flex-col justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
                     <!-- White Container for Title and Trait -->
-                    <div class="bg-white border-2 border-black p-1 mb-1 shadow-sm w-full max-w-[90%] mx-auto transform -rotate-1 relative z-10" style="min-height: 3.5rem;">
+                    <div class="bg-white border-2 border-black rounded-lg p-1 mb-1 shadow-sm w-auto min-w-[50%] max-w-[90%] mx-auto transform -rotate-1 relative z-10 px-4" style="min-height: 3.5rem;">
                         <!-- Centered Title -->
                         <h3 class="truncate text-center w-full" style="font-size: 1.4rem; margin-bottom: 0; line-height: 1.1;">{{ ability.name }}</h3>
 
