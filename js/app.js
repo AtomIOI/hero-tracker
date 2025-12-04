@@ -50,6 +50,9 @@ const app = createApp({
                         current: 0,
                         max: 5
                     },
+                    preferences: {
+                        showLockedStamps: true
+                    },
                     modifier: {
                         current: 0
                     },
@@ -529,6 +532,13 @@ const app = createApp({
                             current: '#1',
                             past: [],
                             collections: []
+                        };
+                    }
+
+                    // Migration: Ensure preferences object exists
+                    if (!this.characterSheet.hero.preferences) {
+                        this.characterSheet.hero.preferences = {
+                            showLockedStamps: true
                         };
                     }
                 }
