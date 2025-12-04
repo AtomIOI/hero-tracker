@@ -102,10 +102,12 @@ h1, h2, h3, h4, .comic-title {
     color: var(--comic-white);
 }
 
-.comic-header-cream {
-    background: var(--comic-cream);
+.comic-header-tan {
+    background-color: var(--comic-tan);
+    background-image: radial-gradient(var(--ink-black) 15%, transparent 16%);
+    background-size: 10px 10px;
 }
-.comic-header-cream .comic-title {
+.comic-header-tan .comic-title {
     color: var(--comic-yellow);
 }
 
