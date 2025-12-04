@@ -216,9 +216,9 @@ app.component('ability-card', {
                     <h3 class="truncate text-center w-full pr-12" style="font-size: 1.4rem;">{{ ability.name }}</h3>
 
                     <!-- Interaction Type Text Label (Top Right, Smaller) -->
-                    <div class="absolute top-0 right-0 font-bangers tracking-wide text-sm z-10"
+                    <div class="absolute top-0 right-0 font-bangers tracking-wide text-base font-bold z-10"
                          :class="interactionClass"
-                         style="text-shadow: 1px 1px 0 #000; -webkit-text-stroke: 0.5px #000; transform: translate(0, 0); top: 2px; right: 5px;">
+                         style="text-shadow: 1px 1px 0 #000; -webkit-text-stroke: 1.5px #000; transform: translate(0, 0); top: 2px; right: 5px;">
                         {{ interactionLabel }}
                     </div>
                 </div>
