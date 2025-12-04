@@ -18,7 +18,7 @@ const app = createApp({
                 },
                 hero: {
                     issues: {
-                        current: 'Issue #1',
+                        current: '#1',
                         past: [],
                         collections: []
                     },
@@ -79,8 +79,6 @@ const app = createApp({
             showIssueModal: false,
             /** @type {Object|null} The ability currently being edited */
             editingAbility: null,
-            /** @type {number|null} Timer ID for issue box long press */
-            issuePressTimer: null,
             /** @type {string} Current navigation page identifier */
             currentPage: 'home',
             /** @type {string} Error message related to profile image upload */
@@ -181,7 +179,7 @@ const app = createApp({
             // Use the lower bound of the segment (segmentNumber - 1) * 10
             // e.g., Segment 1 (0-10%) lights up if pct > 0
             const segmentLowerBound = (segmentNumber - 1) * 10;
-            const isFilled = pct > segmentLowerBound;
+            let isFilled = pct > segmentLowerBound;
 
             // Determine zone thresholds percentages
             const max = this.characterSheet.hero.health.max;
@@ -206,6 +204,19 @@ const app = createApp({
             let color = 'red';
             if (segmentUpperBound >= greenMinPct) color = 'green';
             else if (segmentUpperBound >= yellowMinPct) color = 'yellow';
+
+            // New: Enforce visibility based on Gyro Status
+            const status = this.getGyroStatus(); // 'green', 'yellow', 'red', 'out'
+
+            if (isFilled) {
+                if (color === 'green' && status !== 'green') {
+                    isFilled = false;
+                } else if (color === 'yellow' && (status === 'red' || status === 'out')) {
+                    isFilled = false;
+                } else if (color === 'red' && status === 'out') {
+                    isFilled = false;
+                }
+            }
 
             return isFilled ? `filled-${color}` : `empty-${color}`;
         },
@@ -310,26 +321,6 @@ const app = createApp({
             this.characterSheet.hero.health.ranges.greenMin = Math.floor(max * 0.75);
             this.characterSheet.hero.health.ranges.yellowMin = Math.floor(max * 0.35);
             this.characterSheet.hero.health.ranges.redMin = 1;
-        },
-
-        /**
-         * Handles the start of a long press on the Issue Box.
-         */
-        startIssuePress() {
-            this.issuePressTimer = setTimeout(() => {
-                this.showIssueModal = true;
-                this.issuePressTimer = null;
-            }, 1000);
-        },
-
-        /**
-         * Cancels the long press on the Issue Box.
-         */
-        cancelIssuePress() {
-            if (this.issuePressTimer) {
-                clearTimeout(this.issuePressTimer);
-                this.issuePressTimer = null;
-            }
         },
 
         /**
@@ -521,7 +512,7 @@ const app = createApp({
                     // Migration: Ensure issues object exists
                     if (!this.characterSheet.hero.issues) {
                         this.characterSheet.hero.issues = {
-                            current: 'Issue #1',
+                            current: '#1',
                             past: [],
                             collections: []
                         };

@@ -51,13 +51,8 @@
             <!-- Comic Header Box -->
             <div class="comic-header-box comic-header-yellow">
                 <div class="issue-box cursor-pointer select-none active:scale-95 transition-transform"
-                     @mousedown="startIssuePress"
-                     @touchstart="startIssuePress"
-                     @mouseup="cancelIssuePress"
-                     @touchend="cancelIssuePress"
-                     @mouseleave="cancelIssuePress"
-                     @contextmenu.prevent
-                     title="Hold to edit Issue">
+                     @click="showIssueModal = true"
+                     title="Tap to edit Issue">
                     ISSUE: {{ characterSheet.hero.issues.current || '...' }}
                 </div>
                 <h1 class="comic-title">HERO TRACKER</h1>
@@ -65,6 +60,7 @@
 
             <!-- Merged Hero & Health Container -->
             <div class="merged-hero-health wobbly-box bg-dots mb-4">
+                <div class="section-label">HERO</div>
                 <!-- Hero Header Content -->
                 <div class="hero-header-content">
                     <div class="portrait-container">
@@ -72,7 +68,8 @@
                             <img :src="characterSheet.hero.profileImage || 'assets/default-profile.jpg'" alt="Hero Profile Picture">
                         </div>
                     </div>
-                    <div class="hero-identity">
+                    <!-- Hero Identity Box -->
+                    <div class="hero-identity-box">
                         <h2 class="hero-name">{{ characterSheet.hero.name || 'Unknown Hero' }}</h2>
                         <div class="hero-alias">{{ characterSheet.hero.alias || 'Unknown Alias' }}</div>
                     </div>
@@ -96,7 +93,7 @@
 
             <!-- Hero Profile Panel (Full Width) -->
             <div class="hero-profile-panel wobbly-box bg-dots">
-                <div class="section-label">HERO PROFILE</div>
+                <div class="section-label">PROFILE</div>
                 <div class="profile-content">
                     <div class="profile-grid">
                         <!-- Background Card -->
@@ -163,13 +160,13 @@
                 <h1 class="comic-title">ABILITY MODULES</h1>
             </div>
 
-            <button id="add-power-btn" class="comic-btn plus" @click="openAddAbilityModal">Add New Ability</button>
+            <button id="add-power-btn" class="comic-btn secondary" @click="openAddAbilityModal">Add New Ability</button>
 
             <!-- Green Zone -->
             <div v-if="abilitiesGreen.length > 0" class="zone-container mb-6">
                 <div class="section-label" style="background-color: var(--color-green); color: white;">GREEN ZONE</div>
                 <div class="abilities-grid modules-grid">
-            <ability-card v-for="ability in abilitiesGreen" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
+            <ability-card v-for="ability in abilitiesGreen" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
             </div>
 
@@ -177,7 +174,7 @@
             <div v-if="abilitiesYellow.length > 0" class="zone-container mb-6">
                 <div class="section-label" style="background-color: var(--color-yellow); color: black;">YELLOW ZONE</div>
                 <div class="abilities-grid modules-grid">
-                    <ability-card v-for="ability in abilitiesYellow" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
+                    <ability-card v-for="ability in abilitiesYellow" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
             </div>
 
@@ -185,7 +182,7 @@
             <div v-if="abilitiesRed.length > 0" class="zone-container mb-6">
                 <div class="section-label" style="background-color: var(--color-magenta); color: white;">RED ZONE</div>
                 <div class="abilities-grid modules-grid">
-                    <ability-card v-for="ability in abilitiesRed" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
+                    <ability-card v-for="ability in abilitiesRed" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
             </div>
 
@@ -196,7 +193,7 @@
 
         <!-- Settings Page -->
         <div v-if="currentPage === 'settings'" class="settings-page pb-nav">
-            <div class="comic-header-box comic-header-teal">
+            <div class="comic-header-box comic-header-red">
                 <h1 class="comic-title">SETTINGS</h1>
             </div>
 
