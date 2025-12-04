@@ -240,13 +240,16 @@ app.component('ability-card', {
             <div class="flex flex-col h-full" :style="isLocked ? 'filter: grayscale(100%); opacity: 0.6;' : ''">
                 <!-- Header -->
                 <div class="ability-card-header pattern-dots flex flex-col justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
-                    <!-- Centered Title -->
-                    <h3 class="truncate text-center w-full" style="font-size: 1.4rem; padding-left: 4rem; padding-right: 4rem; margin-bottom: 0;">{{ ability.name }}</h3>
+                    <!-- White Container for Title and Trait -->
+                    <div class="bg-white border-2 border-black p-1 mb-1 shadow-sm w-full max-w-[90%] mx-auto transform -rotate-1 relative z-10" style="min-height: 3.5rem;">
+                        <!-- Centered Title -->
+                        <h3 class="truncate text-center w-full" style="font-size: 1.4rem; margin-bottom: 0; line-height: 1.1;">{{ ability.name }}</h3>
 
-                     <!-- Trait Info (Moved to Header) -->
-                    <div class="text-sm font-bangers tracking-wide w-full text-center"
-                        :class="traitTextClass">
-                        {{ traitLabel }}
+                        <!-- Trait Info -->
+                        <div class="text-sm font-bangers tracking-wide w-full text-center leading-none"
+                            :class="traitTextClass">
+                            {{ traitLabel }}
+                        </div>
                     </div>
 
                     <!-- Interaction Type Badge (Top Right) -->
