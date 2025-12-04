@@ -57,12 +57,39 @@ app.component('ability-card', {
                    qualities.find(q => q.id === this.ability.traitId);
         },
         /**
+         * Determines if the linked trait is a Power or Quality.
+         * @returns {string|null} 'power', 'quality', or null.
+         */
+        traitType() {
+            if (!this.ability.traitId || !this.hero) return null;
+            const powers = this.hero.powers || [];
+            if (powers.some(p => p.id === this.ability.traitId)) return 'power';
+
+            const qualities = this.hero.qualities || [];
+            if (qualities.some(q => q.id === this.ability.traitId)) return 'quality';
+
+            return null;
+        },
+        /**
          * Generates the label for the linked trait.
          * @returns {string} The formatted label string.
          */
         traitLabel() {
             const t = this.linkedTrait;
             return t ? t.name : 'No Trait Linked';
+        },
+        /**
+         * Returns the CSS styles for the trait badge based on type.
+         * @returns {Object} Style object.
+         */
+        traitBadgeStyle() {
+            if (!this.traitType) return { backgroundColor: '#f3f4f6', color: 'black' }; // bg-gray-100
+            if (this.traitType === 'power') {
+                return { backgroundColor: 'var(--comic-yellow)', color: 'var(--comic-red)' };
+            } else if (this.traitType === 'quality') {
+                return { backgroundColor: 'var(--comic-purple)', color: 'white' };
+            }
+            return { backgroundColor: '#f3f4f6', color: 'black' };
         },
         /**
          * Returns the display label for the interaction type.
@@ -219,49 +246,51 @@ app.component('ability-card', {
             <!-- Content Wrapper -->
             <div class="flex flex-col h-full" :style="isLocked ? 'filter: grayscale(100%); opacity: 0.6;' : ''">
                 <!-- Header -->
-                <div class="ability-card-header pattern-dots flex justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
+                <div class="ability-card-header pattern-dots flex flex-col justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
                     <!-- Centered Title -->
-                    <h3 class="truncate text-center w-full" style="font-size: 1.4rem; padding-left: 4rem; padding-right: 4rem;">{{ ability.name }}</h3>
+                    <h3 class="truncate text-center w-full" style="font-size: 1.4rem;">{{ ability.name }}</h3>
 
-                    <!-- Interaction Type Badge (Top Right) -->
-                    <div class="z-10" style="position: absolute; top: 2px; right: 2px;">
+                    <!-- Badges Row -->
+                    <div class="flex justify-center items-center gap-2 mt-1 w-full flex-wrap">
+                        <!-- Interaction Type Badge -->
                         <div class="border-2 border-black rounded px-3 py-1 text-lg font-bold text-white shadow-sm"
                              :class="interactionBgClass">
                             {{ interactionLabel }}
                         </div>
+
+                        <!-- Trait Badge -->
+                        <div class="border-2 border-black rounded px-3 py-1 text-lg font-bold shadow-sm"
+                             :style="traitBadgeStyle">
+                            {{ traitLabel }}
+                        </div>
                     </div>
                 </div>
 
-            <div class="ability-card-body flex flex-col h-full relative" :class="{ 'opacity-50': isLocked }">
                 <div class="ability-card-body flex flex-col flex-1 relative">
-                <!-- Trait Info -->
-                <div class="text-sm font-bangers tracking-wide mb-2 border-b-2 border-black/10 pb-1 w-full text-center"
-                     :class="{ 'text-red-600': !linkedTrait, 'text-black': linkedTrait }">
-                    {{ traitLabel }}
-                </div>
 
-                <!-- Description -->
-                <div class="flex-1 mb-2 font-comic font-bold text-base leading-tight flex items-center justify-center text-center p-2 bg-white/50 rounded border border-black/5 w-full"
-                     style="font-weight: 700;">
-                    {{ ability.text }}
-                </div>
-
-                <!-- Footer: Dice (Left) & Action Icons (Right) -->
-                <div class="flex justify-between items-end mt-auto pt-2 border-t-2 border-black/10 w-full">
-                    <!-- Dice Preview -->
-                    <div class="flex items-center gap-1">
-                        <img v-for="(die, idx) in dicePreview" :key="idx"
-                             :src="die.src"
-                             :alt="die.alt"
-                             class="w-6 h-6 object-contain filter drop-shadow-md">
+                    <!-- Description -->
+                    <div class="flex-1 mb-2 font-comic font-bold text-base leading-tight flex items-center justify-center text-center p-2 bg-white/50 rounded border border-black/5 w-full"
+                         style="font-weight: 700;">
+                        {{ ability.text }}
                     </div>
 
-                    <!-- Action Icons -->
-                    <div class="flex gap-2">
-                        <div v-for="(icon, idx) in basicActionIcons" :key="idx"
-                             class="w-6 h-6 text-black"
-                             :title="icon.label"
-                             v-html="icon.svg">
+                    <!-- Footer: Dice (Left) & Action Icons (Right) -->
+                    <div class="flex justify-between items-end mt-auto pt-2 border-t-2 border-black/10 w-full">
+                        <!-- Dice Preview -->
+                        <div class="flex items-center gap-1">
+                            <img v-for="(die, idx) in dicePreview" :key="idx"
+                                 :src="die.src"
+                                 :alt="die.alt"
+                                 class="w-6 h-6 object-contain filter drop-shadow-md">
+                        </div>
+
+                        <!-- Action Icons -->
+                        <div class="flex gap-2">
+                            <div v-for="(icon, idx) in basicActionIcons" :key="idx"
+                                 class="w-6 h-6 text-black"
+                                 :title="icon.label"
+                                 v-html="icon.svg">
+                            </div>
                         </div>
                     </div>
                 </div>
