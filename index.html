@@ -45,40 +45,45 @@
     <link rel="stylesheet" href="css/desktop.css">
 </head>
 
-<body>
-    <div id="app">
-        <main id="page-content">
-            <!-- Home Page -->
-            <div v-if="currentPage === 'home'">
-                <!-- Comic Header Box -->
-                <div class="comic-header-box comic-header-yellow">
-                    <div class="issue-box cursor-pointer select-none active:scale-95 transition-transform"
-                        @mousedown="startIssuePress"
-                        @touchstart="startIssuePress"
-                        @mouseup="cancelIssuePress"
-                        @touchend="cancelIssuePress"
-                        @mouseleave="cancelIssuePress"
-                        @contextmenu.prevent
-                        title="Hold to edit Issue">
-                        ISSUE: {{ characterSheet.hero.issues.current || '...' }}
-                    </div>
-                    <h1 class="comic-title">HERO TRACKER</h1>
+<body id="app">
+    <main id="page-content">
+        <!-- Home Page -->
+        <div v-if="currentPage === 'home'">
+            <!-- Comic Header Box -->
+            <div class="comic-header-box comic-header-yellow">
+                <div class="issue-box cursor-pointer select-none active:scale-95 transition-transform"
+                     @click="showIssueModal = true"
+                     title="Tap to edit Issue">
+                    ISSUE: {{ characterSheet.hero.issues.current || '...' }}
+                </div>
+                <h1 class="comic-title">HERO TRACKER</h1>
+            </div>
+
+            <!-- Merged Hero & Health Container -->
+            <div class="merged-hero-health wobbly-box bg-dots mb-4">
+                <div class="section-label">HERO</div>
+
+                <!-- Hero Points Star -->
+                <div class="hero-points-star cursor-pointer" @click="openHeroPointsModal">
+                    <svg viewBox="0 0 24 24" class="star-icon">
+                        <path d="M12 2 L15.09 8.26 L22 9.27 L17 14.14 L18.18 21.02 L12 17.77 L5.82 21.02 L7 14.14 L2 9.27 L8.91 8.26 Z" />
+                    </svg>
+                    <span class="star-text">{{ characterSheet.hero.heroPoints.current }}</span>
                 </div>
 
-                <!-- Merged Hero & Health Container -->
-                <div class="merged-hero-health wobbly-box bg-dots mb-4">
-                    <!-- Hero Header Content -->
-                    <div class="hero-header-content">
-                        <div class="portrait-container">
-                            <div class="comic-portrait">
-                                <img :src="characterSheet.hero.profileImage || 'assets/default-profile.jpg'" alt="Hero Profile Picture">
-                            </div>
-                        </div>
-                        <div class="hero-identity">
-                            <h2 class="hero-name">{{ characterSheet.hero.name || 'Unknown Hero' }}</h2>
-                            <div class="hero-alias">{{ characterSheet.hero.alias || 'Unknown Alias' }}</div>
+                <!-- Hero Header Content -->
+                <div class="hero-header-content">
+                    <div class="portrait-container">
+                        <div class="comic-portrait">
+                            <img :src="characterSheet.hero.profileImage || 'assets/default-profile.jpg'" alt="Hero Profile Picture">
                         </div>
                     </div>
+                    <!-- Hero Identity Box -->
+                    <div class="hero-identity-box">
+                        <h2 class="hero-name">{{ characterSheet.hero.name || 'Unknown Hero' }}</h2>
+                        <div class="hero-alias">{{ characterSheet.hero.alias || 'Unknown Alias' }}</div>
+                    </div>
+                </div>
 
                     <!-- Health Section -->
                     <div class="health-section">
@@ -96,44 +101,44 @@
                     </div>
                 </div>
 
-                <!-- Hero Profile Panel (Full Width) -->
-                <div class="hero-profile-panel wobbly-box bg-dots">
-                    <div class="section-label">HERO PROFILE</div>
-                    <div class="profile-content">
-                        <div class="profile-grid">
-                            <!-- Background Card -->
-                            <div class="profile-card">
-                                <div class="profile-card-header">BACKGROUND</div>
-                                <div class="profile-card-body">{{ characterSheet.hero.background || 'N/A' }}</div>
+            <!-- Hero Profile Panel (Full Width) -->
+            <div class="hero-profile-panel wobbly-box bg-dots">
+                <div class="section-label">PROFILE</div>
+                <div class="profile-content">
+                    <div class="profile-grid">
+                        <!-- Background Card -->
+                        <div class="profile-card">
+                            <div class="profile-card-header">BACKGROUND</div>
+                            <div class="profile-card-body">{{ characterSheet.hero.background || 'N/A' }}</div>
+                        </div>
+                        <!-- Power Source Card -->
+                        <div class="profile-card">
+                            <div class="profile-card-header">POWER SOURCE</div>
+                            <div class="profile-card-body">{{ characterSheet.hero.powerSource || 'N/A' }}</div>
+                        </div>
+                        <!-- Archetype Card -->
+                        <div class="profile-card">
+                            <div class="profile-card-header">
+                                ARCHETYPE
+                                <svg class="header-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="currentColor"/>
+                                </svg>
                             </div>
-                            <!-- Power Source Card -->
-                            <div class="profile-card">
-                                <div class="profile-card-header">POWER SOURCE</div>
-                                <div class="profile-card-body">{{ characterSheet.hero.powerSource || 'N/A' }}</div>
+                            <div class="profile-card-body">{{ characterSheet.hero.archetype || 'N/A' }}</div>
+                        </div>
+                        <!-- Personality Card -->
+                        <div class="profile-card">
+                            <div class="profile-card-header">
+                                PERSONALITY
+                                <svg class="header-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
+                                </svg>
                             </div>
-                            <!-- Archetype Card -->
-                            <div class="profile-card">
-                                <div class="profile-card-header">
-                                    ARCHETYPE
-                                    <svg class="header-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" fill="currentColor"/>
-                                    </svg>
-                                </div>
-                                <div class="profile-card-body">{{ characterSheet.hero.archetype || 'N/A' }}</div>
-                            </div>
-                            <!-- Personality Card -->
-                            <div class="profile-card">
-                                <div class="profile-card-header">
-                                    PERSONALITY
-                                    <svg class="header-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="currentColor"/>
-                                    </svg>
-                                </div>
-                                <div class="profile-card-body">{{ characterSheet.hero.personality || 'N/A' }}</div>
-                            </div>
+                            <div class="profile-card-body">{{ characterSheet.hero.personality || 'N/A' }}</div>
                         </div>
                     </div>
                 </div>
+            </div>
 
                 <!-- Principles Section -->
                 <div class="principles-panel wobbly-box bg-dots">
@@ -165,42 +170,43 @@
                     <h1 class="comic-title">ABILITY MODULES</h1>
                 </div>
 
-                <button id="add-power-btn" class="comic-btn plus" @click="openAddAbilityModal">Add New Ability</button>
+            <button id="add-power-btn" class="comic-btn secondary" @click="openAddAbilityModal">Add New Ability</button>
 
-                <!-- Green Zone -->
-                <div v-if="abilitiesGreen.length > 0" class="zone-container mb-6">
-                    <div class="section-label" style="background-color: var(--color-green); color: white;">GREEN ZONE</div>
-                    <div class="abilities-grid modules-grid">
-                <ability-card v-for="ability in abilitiesGreen" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
-                    </div>
+            <!-- Green Zone -->
+            <div v-if="abilitiesGreen.length > 0" class="zone-container mb-6">
+                <div class="section-label" style="background-color: var(--color-green); color: white;">GREEN ZONE</div>
+                <div class="abilities-grid modules-grid">
+            <ability-card v-for="ability in abilitiesGreen" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
+            </div>
 
-                <!-- Yellow Zone -->
-                <div v-if="abilitiesYellow.length > 0" class="zone-container mb-6">
-                    <div class="section-label" style="background-color: var(--color-yellow); color: black;">YELLOW ZONE</div>
-                    <div class="abilities-grid modules-grid">
-                        <ability-card v-for="ability in abilitiesYellow" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
-                    </div>
+            <!-- Yellow Zone -->
+            <div v-if="abilitiesYellow.length > 0" class="zone-container mb-6">
+                <div class="section-label" style="background-color: var(--color-yellow); color: black;">YELLOW ZONE</div>
+                <div class="abilities-grid modules-grid">
+                    <ability-card v-for="ability in abilitiesYellow" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
+            </div>
 
-                <!-- Red Zone -->
-                <div v-if="abilitiesRed.length > 0" class="zone-container mb-6">
-                    <div class="section-label" style="background-color: var(--color-magenta); color: white;">RED ZONE</div>
-                    <div class="abilities-grid modules-grid">
-                        <ability-card v-for="ability in abilitiesRed" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }"></ability-card>
-                    </div>
+            <!-- Red Zone -->
+            <div v-if="abilitiesRed.length > 0" class="zone-container mb-6">
+                <div class="section-label" style="background-color: var(--color-magenta); color: white;">RED ZONE</div>
+                <div class="abilities-grid modules-grid">
+                    <ability-card v-for="ability in abilitiesRed" :key="ability.id" :ability="ability" :hero="characterSheet.hero" @edit="openEditAbilityModal(ability)" @use="handleAbilityUse" :class="{ 'ability-unavailable': !isAbilityAvailable(ability) }" :locked="!isAbilityAvailable(ability)"></ability-card>
                 </div>
+            </div>
 
                 <add-edit-ability-modal :show="showAddEditAbilityModal" :ability="editingAbility" :hero="characterSheet.hero" @close="closeAddEditAbilityModal" @save="saveAbility" @delete="deleteAbility"></add-edit-ability-modal>
             </div>
 
-            <issue-modal :show="showIssueModal" :hero="characterSheet.hero" @close="closeIssueModal"></issue-modal>
+        <issue-modal :show="showIssueModal" :hero="characterSheet.hero" @close="closeIssueModal"></issue-modal>
+        <hero-points-modal :show="showHeroPointsModal" :hero="characterSheet.hero" @close="closeHeroPointsModal"></hero-points-modal>
 
-            <!-- Settings Page -->
-            <div v-if="currentPage === 'settings'" class="settings-page pb-nav">
-                <div class="comic-header-box comic-header-teal">
-                    <h1 class="comic-title">SETTINGS</h1>
-                </div>
+        <!-- Settings Page -->
+        <div v-if="currentPage === 'settings'" class="settings-page pb-nav">
+            <div class="comic-header-box comic-header-red">
+                <h1 class="comic-title">SETTINGS</h1>
+            </div>
 
                 <div class="settings-container">
                     <!-- Identity Section -->
@@ -439,6 +445,7 @@
     <script src="js/components/AbilityCard.js"></script>
     <script src="js/components/AddEditAbilityModal.js"></script>
     <script src="js/components/IssueModal.js"></script>
+    <script src="js/components/HeroPointsModal.js"></script>
     <script src="js/components/AddEditTraitModal.js"></script>
     <script src="js/components/PowersQualitiesPage.js"></script>
     <script src="js/components/DicePage.js"></script>

@@ -13,7 +13,15 @@ app.component('ability-card', {
          * The hero object, containing powers and qualities.
          * @type {Object}
          */
-        hero: Object
+        hero: Object,
+        /**
+         * Whether the ability is locked/unavailable.
+         * @type {Boolean}
+         */
+        locked: {
+            type: Boolean,
+            default: false
+        }
     },
     emits: ['edit', 'use'],
     data() {
@@ -46,7 +54,7 @@ app.component('ability-card', {
          */
         traitLabel() {
             const t = this.linkedTrait;
-            return t ? `${t.name} (d${t.die})` : 'No Trait Linked';
+            return t ? t.name : 'No Trait Linked';
         },
         /**
          * Returns the display label for the interaction type.
@@ -77,31 +85,7 @@ app.component('ability-card', {
          * @returns {boolean} True if locked.
          */
         isLocked() {
-            if (!this.hero || !this.hero.status) return false;
-            const status = this.hero.status.toLowerCase(); // green, yellow, red, out
-            const zone = (this.ability.zone || '').toLowerCase();
-
-            // Logic:
-            // Green Status: Can use Green only? Usually SCRPG allows "Green" abilities in Green zone.
-            // Actually, usually:
-            // Green Zone: Available in Green, Yellow, Red
-            // Yellow Zone: Available in Yellow, Red
-            // Red Zone: Available in Red
-            // Out: None? Or maybe all locked.
-
-            // Wait, if I am Green status, I can only use Green abilities.
-            // If I am Yellow status, I can use Green and Yellow abilities.
-            // If I am Red status, I can use Green, Yellow, and Red abilities.
-
-            const statusRank = { 'green': 1, 'yellow': 2, 'red': 3, 'out': 0 };
-            const zoneRank = { 'green': 1, 'yellow': 2, 'red': 3 };
-
-            const currentRank = statusRank[status] || 0;
-            const abilityRank = zoneRank[zone] || 1; // Default to green if unknown
-
-            // Locked if ability rank is higher than current rank
-            // e.g. Ability Red (3) > Status Green (1) -> Locked
-            return abilityRank > currentRank;
+            return this.locked;
         },
         /**
          * Returns the CSS class for the background based on zone.
@@ -109,6 +93,7 @@ app.component('ability-card', {
          * @returns {string} The CSS class name.
          */
         zoneClass() {
+            if (this.isLocked) return 'bg-gray-100';
             if (!this.ability.zone) return 'bg-gray-100';
             const zone = this.ability.zone.toLowerCase();
             const map = {
@@ -125,6 +110,40 @@ app.component('ability-card', {
         basicActionIcons() {
             if (!this.ability.actions || !window.ABILITY_ICONS) return [];
             return this.ability.actions.map(key => window.ABILITY_ICONS[key]).filter(Boolean);
+        },
+        /**
+         * Calculates the preview dice images for the ability.
+         * @returns {Array<{src: string, alt: string}>} Array of dice image objects.
+         */
+        dicePreview() {
+            if (!this.hero) return [];
+
+            // 1. Status Die
+            let statusDieVal = 6;
+            const health = this.hero.health;
+            if (health && health.ranges) {
+                if (health.current >= health.ranges.greenMin) {
+                    statusDieVal = this.hero.statusDice.green;
+                } else if (health.current >= health.ranges.yellowMin) {
+                    statusDieVal = this.hero.statusDice.yellow;
+                } else if (health.current >= health.ranges.redMin) {
+                    statusDieVal = this.hero.statusDice.red;
+                }
+            }
+
+            // 2. Trait Die
+            let traitDieVal = null;
+            if (this.linkedTrait) {
+                traitDieVal = this.linkedTrait.die;
+            }
+
+            // 3. Unknown Die
+
+            return [
+                { src: `assets/dice/D${statusDieVal}.png`, alt: `Status: d${statusDieVal}` },
+                { src: traitDieVal ? `assets/dice/D${traitDieVal}.png` : 'assets/dice/unknown.svg', alt: traitDieVal ? `Trait: d${traitDieVal}` : 'Unknown Trait' },
+                { src: 'assets/dice/unknown.svg', alt: 'Bonus/Min/Max' }
+            ];
         }
     },
     methods: {
@@ -182,43 +201,59 @@ app.component('ability-card', {
              @contextmenu.prevent>
 
             <!-- Locked Overlay -->
-            <div v-if="isLocked" class="absolute inset-0 z-20 flex items-center justify-center bg-black/50 rounded pointer-events-none">
-                <div class="border-4 border-red-600 text-red-600 font-bangers text-4xl px-4 py-2 transform -rotate-12 uppercase tracking-widest bg-white/80"
-                     style="box-shadow: 0 0 10px rgba(0,0,0,0.5);">
+            <div v-if="isLocked" class="absolute inset-0 z-20 flex items-center justify-center rounded pointer-events-none">
+                <div class="font-bangers text-8xl px-8 py-2 uppercase tracking-widest opacity-95 bg-white/10"
+                     style="color: #dc2626; -webkit-text-stroke: 3px black; border: 8px solid #dc2626; border-radius: 12px; box-shadow: 0 0 0 3px black; transform: rotate(-15deg);">
                     LOCKED
                 </div>
             </div>
 
-            <!-- Header -->
-            <div class="ability-card-header pattern-dots flex justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
-                <!-- Centered Title -->
-                <h3 class="truncate text-center w-full pr-12" style="font-size: 1.4rem;">{{ ability.name }}</h3>
+            <!-- Content Wrapper -->
+            <div class="flex flex-col h-full" :style="isLocked ? 'filter: grayscale(100%); opacity: 0.6;' : ''">
+                <!-- Header -->
+                <div class="ability-card-header pattern-dots flex justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
+                    <!-- Centered Title -->
+                    <h3 class="truncate text-center w-full pr-12" style="font-size: 1.4rem;">{{ ability.name }}</h3>
 
-                <!-- Interaction Type Text Label (Top Right, Smaller) -->
-                <div class="absolute top-0 right-0 font-bangers tracking-wide text-sm z-10"
-                     :class="interactionClass"
-                     style="text-shadow: 1px 1px 0 #000; -webkit-text-stroke: 0.5px #000; transform: translate(0, 0); top: 2px; right: 5px;">
-                    {{ interactionLabel }}
+                    <!-- Interaction Type Text Label (Top Right, Smaller) -->
+                    <div class="absolute top-0 right-0 font-bangers tracking-wide text-sm z-10"
+                         :class="interactionClass"
+                         style="text-shadow: 1px 1px 0 #000; -webkit-text-stroke: 0.5px #000; transform: translate(0, 0); top: 2px; right: 5px;">
+                        {{ interactionLabel }}
+                    </div>
                 </div>
-            </div>
 
             <div class="ability-card-body flex flex-col h-full relative" :class="{ 'opacity-50': isLocked }">
+                <div class="ability-card-body flex flex-col flex-1 relative">
                 <!-- Trait Info -->
-                <div class="text-sm font-bangers tracking-wide mb-2 border-b-2 border-black/10 pb-1 w-full text-center" style="color: var(--color-magenta); text-shadow: 1px 1px 0px white;">
+                <div class="text-sm font-bangers tracking-wide mb-2 border-b-2 border-black/10 pb-1 w-full text-center"
+                     :class="{ 'text-red-600': !linkedTrait, 'text-black': linkedTrait }">
                     {{ traitLabel }}
                 </div>
 
                 <!-- Description -->
-                <div class="flex-1 mb-2 text-sm leading-tight flex items-center justify-center text-center p-2 bg-white/50 rounded border border-black/5 w-full">
+                <div class="flex-1 mb-2 font-comic font-bold text-base leading-tight flex items-center justify-center text-center p-2 bg-white/50 rounded border border-black/5 w-full"
+                     style="font-weight: 700;">
                     {{ ability.text }}
                 </div>
 
-                <!-- Action Icons Footer -->
-                <div class="flex gap-2 mt-auto pt-2 border-t-2 border-black/10 justify-center w-full">
-                    <div v-for="(icon, idx) in basicActionIcons" :key="idx"
-                         class="w-6 h-6 text-black"
-                         :title="icon.label"
-                         v-html="icon.svg">
+                <!-- Footer: Dice (Left) & Action Icons (Right) -->
+                <div class="flex justify-between items-end mt-auto pt-2 border-t-2 border-black/10 w-full">
+                    <!-- Dice Preview -->
+                    <div class="flex items-center gap-1">
+                        <img v-for="(die, idx) in dicePreview" :key="idx"
+                             :src="die.src"
+                             :alt="die.alt"
+                             class="w-6 h-6 object-contain filter drop-shadow-md">
+                    </div>
+
+                    <!-- Action Icons -->
+                    <div class="flex gap-2">
+                        <div v-for="(icon, idx) in basicActionIcons" :key="idx"
+                             class="w-6 h-6 text-black"
+                             :title="icon.label"
+                             v-html="icon.svg">
+                        </div>
                     </div>
                 </div>
             </div>

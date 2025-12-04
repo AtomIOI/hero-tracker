@@ -80,7 +80,7 @@ app.component('powers-qualities-page', {
                 </button>
             </div>
 
-            <button class="comic-btn plus add-trait-btn" @click="openAddModal">
+            <button class="comic-btn plus purple add-trait-btn" @click="openAddModal">
                 Add New {{ currentTypeLabel }}
             </button>
 

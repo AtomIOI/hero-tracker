@@ -18,7 +18,7 @@ const app = createApp({
                 },
                 hero: {
                     issues: {
-                        current: 'Issue #1',
+                        current: '#1',
                         past: [],
                         collections: []
                     },
@@ -67,9 +67,9 @@ const app = createApp({
                         { id: 'leadership', name: 'Leadership', die: 6 }
                     ],
                     abilities: [
-                        { id: 'laser-eyes', name: 'Laser Eyes', die: 8, zone: 'green', text: 'Shoots lasers from eyes.' },
-                        { id: 'flight', name: 'Flight', die: 10, zone: 'yellow', text: 'Can fly.' },
-                        { id: 'super-strength', name: 'Super Strength', die: 12, zone: 'red', text: 'Is very strong.' }
+                        { id: 'laser-eyes', name: 'Laser Eyes', die: 8, zone: 'green', text: 'Shoots lasers from eyes.', traitId: 'lightning-bolt' },
+                        { id: 'flight', name: 'Flight', die: 10, zone: 'yellow', text: 'Can fly.', traitId: 'weather-control' },
+                        { id: 'super-strength', name: 'Super Strength', die: 12, zone: 'red', text: 'Is very strong.', traitId: 'leadership' }
                     ]
                 }
             },
@@ -77,10 +77,10 @@ const app = createApp({
             showAddEditAbilityModal: false,
             /** @type {boolean} Controls visibility of the Issue Modal */
             showIssueModal: false,
+            /** @type {boolean} Controls visibility of the Hero Points Modal */
+            showHeroPointsModal: false,
             /** @type {Object|null} The ability currently being edited */
             editingAbility: null,
-            /** @type {number|null} Timer ID for issue box long press */
-            issuePressTimer: null,
             /** @type {string} Current navigation page identifier */
             currentPage: 'home',
             /** @type {string} Error message related to profile image upload */
@@ -181,7 +181,7 @@ const app = createApp({
             // Use the lower bound of the segment (segmentNumber - 1) * 10
             // e.g., Segment 1 (0-10%) lights up if pct > 0
             const segmentLowerBound = (segmentNumber - 1) * 10;
-            const isFilled = pct > segmentLowerBound;
+            let isFilled = pct > segmentLowerBound;
 
             // Determine zone thresholds percentages
             const max = this.characterSheet.hero.health.max;
@@ -206,6 +206,19 @@ const app = createApp({
             let color = 'red';
             if (segmentUpperBound >= greenMinPct) color = 'green';
             else if (segmentUpperBound >= yellowMinPct) color = 'yellow';
+
+            // New: Enforce visibility based on Gyro Status
+            const status = this.getGyroStatus(); // 'green', 'yellow', 'red', 'out'
+
+            if (isFilled) {
+                if (color === 'green' && status !== 'green') {
+                    isFilled = false;
+                } else if (color === 'yellow' && (status === 'red' || status === 'out')) {
+                    isFilled = false;
+                } else if (color === 'red' && status === 'out') {
+                    isFilled = false;
+                }
+            }
 
             return isFilled ? `filled-${color}` : `empty-${color}`;
         },
@@ -313,30 +326,22 @@ const app = createApp({
         },
 
         /**
-         * Handles the start of a long press on the Issue Box.
-         */
-        startIssuePress() {
-            this.issuePressTimer = setTimeout(() => {
-                this.showIssueModal = true;
-                this.issuePressTimer = null;
-            }, 1000);
-        },
-
-        /**
-         * Cancels the long press on the Issue Box.
-         */
-        cancelIssuePress() {
-            if (this.issuePressTimer) {
-                clearTimeout(this.issuePressTimer);
-                this.issuePressTimer = null;
-            }
-        },
-
-        /**
          * Closes the Issue Modal.
          */
         closeIssueModal() {
             this.showIssueModal = false;
+        },
+        /**
+         * Opens the Hero Points Modal.
+         */
+        openHeroPointsModal() {
+            this.showHeroPointsModal = true;
+        },
+        /**
+         * Closes the Hero Points Modal.
+         */
+        closeHeroPointsModal() {
+            this.showHeroPointsModal = false;
         },
         /**
          * Handles the profile image file upload event.
@@ -521,7 +526,7 @@ const app = createApp({
                     // Migration: Ensure issues object exists
                     if (!this.characterSheet.hero.issues) {
                         this.characterSheet.hero.issues = {
-                            current: 'Issue #1',
+                            current: '#1',
                             past: [],
                             collections: []
                         };
