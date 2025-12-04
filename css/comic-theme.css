@@ -367,6 +367,7 @@ h1, h2, h3, h4, .comic-title {
 /* --- COMPONENT: TABS --- */
 .comic-tab {
     background-color: var(--comic-cream);
+    color: var(--ink-black);
     border: var(--border-thick);
     border-bottom: none;
     padding: 10px 20px;
@@ -386,6 +387,7 @@ h1, h2, h3, h4, .comic-title {
 
 .comic-tab.active {
     background-color: var(--comic-yellow);
+    color: var(--comic-red);
     opacity: 1;
     font-weight: bold;
     transform: translateY(-4px);
