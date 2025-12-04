@@ -213,10 +213,10 @@ app.component('ability-card', {
                 <!-- Header -->
                 <div class="ability-card-header pattern-dots flex justify-center items-center relative mb-2 pb-1 border-b-2 border-black/10" style="min-height: 40px;">
                     <!-- Centered Title -->
-                    <h3 class="truncate text-center w-full pr-12" style="font-size: 1.4rem;">{{ ability.name }}</h3>
+                    <h3 class="truncate text-center w-full" style="font-size: 1.4rem; padding-right: 4rem;">{{ ability.name }}</h3>
 
                     <!-- Interaction Type Badge (Top Right) -->
-                    <div class="absolute top-0 right-0 z-10 mr-1 mt-1">
+                    <div class="z-10" style="position: absolute; top: 5px; right: 5px;">
                         <div class="border-2 border-black rounded px-2 py-0.5 text-xs font-bold text-white shadow-sm"
                              :class="interactionBgClass">
                             {{ interactionLabel }}
