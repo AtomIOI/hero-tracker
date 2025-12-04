@@ -225,7 +225,7 @@ app.component('ability-card', {
 
                     <!-- Interaction Type Badge (Top Right) -->
                     <div class="z-10" style="position: absolute; top: 5px; right: 5px;">
-                        <div class="border-2 border-black rounded px-2 py-0.5 text-xs font-bold text-white shadow-sm"
+                        <div class="border-2 border-black rounded px-4 py-2 text-2xl font-bold text-white shadow-sm"
                              :class="interactionBgClass">
                             {{ interactionLabel }}
                         </div>

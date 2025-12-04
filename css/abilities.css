@@ -107,3 +107,8 @@ input[type="radio"]:checked + div {
     position: relative; /* Anchor for absolute .section-label */
     margin-top: 2rem; /* Space for the sticker header */
 }
+
+/* Added for larger badge */
+.text-2xl { font-size: 1.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
