@@ -82,6 +82,14 @@ const app = createApp({
             showIssueModal: false,
             /** @type {boolean} Controls visibility of the Hero Points Modal */
             showHeroPointsModal: false,
+            /** @type {boolean} Controls visibility of the Scene Tracker Override Modal */
+            showSceneTrackerModal: false,
+            /** @type {Object} State of scene tracker overrides */
+            sceneOverrides: {
+                green: false,
+                yellow: false,
+                red: false
+            },
             /** @type {Object|null} The ability currently being edited */
             editingAbility: null,
             /** @type {string} Current navigation page identifier */
@@ -297,6 +305,11 @@ const app = createApp({
          * @returns {boolean} True if available.
          */
         isAbilityAvailable(ability) {
+            // Check override first (Adds to availability)
+            if (this.sceneOverrides && this.sceneOverrides[ability.zone]) {
+                return true;
+            }
+
             const gyro = this.getGyroStatus();
             switch (gyro) {
                 case 'green':
@@ -346,6 +359,29 @@ const app = createApp({
         closeHeroPointsModal() {
             this.showHeroPointsModal = false;
         },
+
+        /**
+         * Opens the Scene Tracker Override Modal.
+         */
+        openSceneTrackerModal() {
+            this.showSceneTrackerModal = true;
+        },
+        /**
+         * Closes the Scene Tracker Override Modal.
+         */
+        closeSceneTrackerModal() {
+            this.showSceneTrackerModal = false;
+        },
+        /**
+         * Toggles a scene override for a specific zone.
+         * @param {string} zone - The zone to toggle ('green', 'yellow', 'red').
+         */
+        toggleSceneOverride(zone) {
+            if (this.sceneOverrides.hasOwnProperty(zone)) {
+                this.sceneOverrides[zone] = !this.sceneOverrides[zone];
+            }
+        },
+
         /**
          * Handles the profile image file upload event.
          * Processes, resizes, and saves the image as a Data URL.

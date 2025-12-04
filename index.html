@@ -37,6 +37,7 @@
     <link rel="stylesheet" href="css/comic-theme.css">
     <link rel="stylesheet" href="css/home.css">
     <link rel="stylesheet" href="css/abilities.css">
+    <link rel="stylesheet" href="css/scene-tracker.css">
     <link rel="stylesheet" href="css/settings.css">
     <link rel="stylesheet" href="css/dice-select.css">
     <link rel="stylesheet" href="css/dice.css">
@@ -170,7 +171,10 @@
                     <h1 class="comic-title">ABILITY MODULES</h1>
                 </div>
 
-            <button id="add-power-btn" class="comic-btn secondary" @click="openAddAbilityModal">Add New Ability</button>
+            <div class="flex gap-2 mb-4 justify-between">
+                <button id="add-power-btn" class="comic-btn secondary flex-1" @click="openAddAbilityModal">Add New Ability</button>
+                <button id="scene-override-btn" class="comic-btn btn-scene-override flex-1" @click="openSceneTrackerModal">SCENE OVERRIDE</button>
+            </div>
 
             <!-- Green Zone -->
             <div v-if="abilitiesGreen.length > 0" class="zone-container mb-6">
@@ -201,6 +205,7 @@
 
         <issue-modal :show="showIssueModal" :hero="characterSheet.hero" @close="closeIssueModal"></issue-modal>
         <hero-points-modal :show="showHeroPointsModal" :hero="characterSheet.hero" @close="closeHeroPointsModal"></hero-points-modal>
+        <scene-tracker-modal :show="showSceneTrackerModal" :overrides="sceneOverrides" @close="closeSceneTrackerModal" @toggle-override="toggleSceneOverride"></scene-tracker-modal>
 
         <!-- Settings Page -->
         <div v-if="currentPage === 'settings'" class="settings-page pb-nav">
@@ -454,6 +459,7 @@
     <script src="js/components/AddEditAbilityModal.js"></script>
     <script src="js/components/IssueModal.js"></script>
     <script src="js/components/HeroPointsModal.js"></script>
+    <script src="js/components/SceneTrackerModal.js"></script>
     <script src="js/components/AddEditTraitModal.js"></script>
     <script src="js/components/PowersQualitiesPage.js"></script>
     <script src="js/components/DicePage.js"></script>
