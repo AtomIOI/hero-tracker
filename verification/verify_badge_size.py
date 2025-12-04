@@ -23,11 +23,11 @@ def verify_badge_size_screenshot():
             time.sleep(1) # Wait for animation/render
 
             # Find the first ability card's interaction badge
-            # Updated selector to look for text-2xl
-            badge_locator = page.locator(".ability-card .ability-card-header .border-2.border-black.text-2xl").first
+            # Updated selector to look for text-lg
+            badge_locator = page.locator(".ability-card .ability-card-header .border-2.border-black.text-lg").first
 
             if badge_locator.count() == 0:
-                print("No badge found with .text-2xl selector.")
+                print("No badge found with .text-lg selector.")
                 badge_locator = page.locator(".ability-card .ability-card-header > div[style*='position: absolute'] > div").first
 
             if badge_locator.count() == 0:
@@ -40,12 +40,18 @@ def verify_badge_size_screenshot():
             # Take screenshot of the badge specifically, or the card header
             # Taking screenshot of the whole card header to see context
             header_locator = page.locator(".ability-card .ability-card-header").first
-            header_locator.screenshot(path="verification/badge_screenshot.png")
-            print("Screenshot saved to verification/badge_screenshot.png")
+            header_locator.screenshot(path="verification/badge_screenshot_updated.png")
+            print("Screenshot saved to verification/badge_screenshot_updated.png")
 
             # Get computed styles
             font_size = badge_locator.evaluate("el => window.getComputedStyle(el).fontSize")
             print(f"Badge Font Size: {font_size}")
+
+            # Get position
+            parent = page.locator(".ability-card .ability-card-header > div[style*='position: absolute']").first
+            top = parent.evaluate("el => el.style.top")
+            right = parent.evaluate("el => el.style.right")
+            print(f"Position: top={top}, right={right}")
 
         except Exception as e:
             print(f"Error: {e}")

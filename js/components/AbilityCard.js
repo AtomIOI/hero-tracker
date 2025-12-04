@@ -224,8 +224,8 @@ app.component('ability-card', {
                     <h3 class="truncate text-center w-full" style="font-size: 1.4rem; padding-left: 4rem; padding-right: 4rem;">{{ ability.name }}</h3>
 
                     <!-- Interaction Type Badge (Top Right) -->
-                    <div class="z-10" style="position: absolute; top: 5px; right: 5px;">
-                        <div class="border-2 border-black rounded px-4 py-2 text-2xl font-bold text-white shadow-sm"
+                    <div class="z-10" style="position: absolute; top: 2px; right: 2px;">
+                        <div class="border-2 border-black rounded px-3 py-1 text-lg font-bold text-white shadow-sm"
                              :class="interactionBgClass">
                             {{ interactionLabel }}
                         </div>
