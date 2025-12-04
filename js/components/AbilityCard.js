@@ -168,8 +168,8 @@ app.component('ability-card', {
 
             <!-- Locked Overlay -->
             <div v-if="isLocked" class="absolute inset-0 z-20 flex items-center justify-center rounded pointer-events-none">
-                <div class="border-8 border-red-600 text-red-600 font-bangers text-7xl px-8 py-2 uppercase tracking-widest opacity-90 bg-white/10"
-                     style="border-style: double; text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5); transform: rotate(-15deg); border-width: 8px;">
+                <div class="border-red-600 text-red-600 font-bangers text-8xl px-10 py-4 uppercase tracking-widest opacity-90 bg-white/20"
+                     style="border-width: 12px; border-style: double; text-shadow: 3px 3px 0px rgba(255, 255, 255, 0.7); transform: rotate(-20deg); box-shadow: 0 0 10px rgba(0,0,0,0.3);">
                     LOCKED
                 </div>
             </div>
