@@ -106,7 +106,7 @@ h1, h2, h3, h4, .comic-title {
     background: var(--comic-grey);
 }
 .comic-header-grey .comic-title {
-    color: var(--comic-grey);
+    color: var(--comic-yellow);
 }
 
 .issue-box {
