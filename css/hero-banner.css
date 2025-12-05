@@ -32,20 +32,20 @@
 .hero-banner-inner {
     background-color: var(--comic-cream); /* Light tan / paper */
     border: 3px solid var(--color-ink);
-    padding: 0.5rem;
+    padding: 1.5rem 1rem; /* Increased padding for larger size */
     transform: rotate(1deg); /* Counter-rotate slightly */
     box-shadow: 3px 3px 0px rgba(0,0,0,0.2);
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 80px;
+    min-height: 100px; /* Increased minimum height */
     position: relative;
 }
 
 /* The Title Text Container */
 .hero-banner-title {
     font-family: var(--font-header);
-    font-size: 3.2rem;
+    font-size: 3.8rem; /* Increased font size */
     color: var(--comic-yellow); /* Yellow text */
     text-align: center;
     line-height: 0.9;
