@@ -1,5 +1,11 @@
 /* Home Page Specific Styles (Updated) */
 
+/* Hero Section Wrapper */
+.hero-section-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 /* Merged Hero & Health Container */
 .merged-hero-health {
     display: flex;
@@ -346,8 +352,8 @@
 /* Hero Points Star */
 .hero-points-star {
     position: absolute;
-    top: -5px;
-    right: -5px;
+    top: -15px;
+    right: -10px;
     width: 60px;
     height: 60px;
     z-index: 10;
@@ -356,6 +362,8 @@
     align-items: center;
     transition: transform 0.1s;
     cursor: pointer;
+    transform: rotate(5deg);
+    filter: drop-shadow(2px 2px 0px rgba(0,0,0,0.5));
 }
 
 .hero-points-star:active {

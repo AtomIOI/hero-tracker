@@ -71,9 +71,7 @@
             </div>
 
             <!-- Merged Hero & Health Container -->
-            <div class="merged-hero-health wobbly-box bg-dots mb-4">
-                <div class="section-label">HERO</div>
-
+            <div class="hero-section-wrapper mb-4">
                 <!-- Hero Points Star -->
                 <div class="hero-points-star cursor-pointer" @click="openHeroPointsModal">
                     <svg viewBox="0 0 24 24" class="star-icon">
@@ -82,7 +80,10 @@
                     <span class="star-text">{{ characterSheet.hero.heroPoints.current }}</span>
                 </div>
 
-                <!-- Hero Header Content -->
+                <div class="merged-hero-health wobbly-box bg-dots">
+                    <div class="section-label">HERO</div>
+
+                    <!-- Hero Header Content -->
                 <div class="hero-header-content">
                     <div class="portrait-container">
                         <div class="comic-portrait">
@@ -111,6 +112,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
             <!-- Hero Profile Panel (Full Width) -->
             <div class="hero-profile-panel wobbly-box bg-dots">
