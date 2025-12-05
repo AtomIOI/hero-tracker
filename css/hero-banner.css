@@ -139,8 +139,20 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 380px) {
+@media (max-width: 480px) {
     .hero-banner-title {
-        font-size: 2.8rem;
+        font-size: 2.0rem; /* Significantly reduced to fit mobile */
+        gap: 8px; /* Reduced gap */
+    }
+    .hero-banner-center-star {
+        width: 24px;
+        height: 24px;
+    }
+    .hero-banner-center-star::after {
+        font-size: 1rem;
+    }
+    .hero-banner-inner {
+        padding: 0.3rem; /* Reduce padding to give more room for text */
+        min-height: 60px;
     }
 }
