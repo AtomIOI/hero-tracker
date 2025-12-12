@@ -107,6 +107,17 @@ const app = createApp({
             diceSelection: [6, 6, 6]
         };
     },
+    watch: {
+        /**
+         * Deep watcher to auto-save character sheet changes.
+         */
+        characterSheet: {
+            handler() {
+                this.persistData();
+            },
+            deep: true
+        }
+    },
     computed: {
         /**
          * Calculates the health percentage.
@@ -482,15 +493,27 @@ const app = createApp({
         },
 
         /**
-         * Saves the current settings to localStorage.
+         * Persists the current character sheet to localStorage silently.
+         * @returns {boolean} True if save was successful.
          */
-        saveSettings() {
+        persistData() {
             this.updateHealthRanges();
             try {
                 localStorage.setItem('hero-character', JSON.stringify(this.characterSheet));
-                alert('Settings Saved!');
+                return true;
             } catch (e) {
-                console.error('Error saving settings', e);
+                console.error('Error auto-saving settings', e);
+                return false;
+            }
+        },
+
+        /**
+         * Saves the current settings to localStorage (Manual Trigger).
+         */
+        saveSettings() {
+            if (this.persistData()) {
+                alert('Settings Saved!');
+            } else {
                 alert('Error saving settings');
             }
         },
