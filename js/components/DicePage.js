@@ -21,7 +21,7 @@ app.component('dice-page', {
     <div class="dice-page pb-nav">
         <!-- Dice Tray Header -->
         <div class="comic-header-box comic-header-teal">
-            <h1 class="comic-title">DICE TRAY</h1>
+            <h1 class="comic-title">{{ hero.preferences?.hideDiceTray ? 'DICE' : 'DICE TRAY' }}</h1>
         </div>
 
         <div v-if="!hero.preferences?.hideDiceTray">

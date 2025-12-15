@@ -24,10 +24,9 @@ test.describe('Hide Dice Tray Feature', () => {
         // Navigate to Dice Page
         await page.click('.nav-item:has-text("DICE")');
 
-        // Verify Dice Tray Header IS visible (it's outside the v-if in my implementation plan?
-        // Wait, looking at DicePage.js content: "DICE TRAY" header is OUTSIDE the v-if.
-        // The v-if="!hero.preferences?.hideDiceTray" wraps .dice-selection-area, .roll-button-container, .results-container
-        await expect(page.locator('h1:has-text("DICE TRAY")')).toBeVisible();
+        // Verify Dice Tray Header is visible but text is changed to "DICE"
+        await expect(page.locator('h1.comic-title')).toHaveText('DICE');
+        await expect(page.locator('h1.comic-title')).not.toHaveText('DICE TRAY');
 
         // Verify Dice Selection Area is HIDDEN
         await expect(page.locator('.dice-selection-area')).not.toBeVisible();
@@ -42,6 +41,9 @@ test.describe('Hide Dice Tray Feature', () => {
     test('should show dice tray by default', async ({ page }) => {
         // Navigate to Dice Page
         await page.click('.nav-item:has-text("DICE")');
+
+        // Verify Header says "DICE TRAY"
+        await expect(page.locator('h1.comic-title')).toHaveText('DICE TRAY');
 
         // Verify Dice Selection Area is VISIBLE
         await expect(page.locator('.dice-selection-area')).toBeVisible();
