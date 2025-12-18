@@ -612,6 +612,12 @@
                             </div>
                             <div class="flex items-center mt-2">
                                 <label class="toggle-switch">
+                                    <input type="checkbox" v-model="characterSheet.hero.preferences.hideDiceTray"
+                                        id="pref-hide-dice">
+                                    <span class="slider"></span>
+                                </label>
+                                <label for="pref-hide-dice" class="font-comic font-bold text-lg cursor-pointer">Hide Dice
+                                    Tray</label>
                                     <input type="checkbox" v-model="characterSheet.hero.preferences.showOutZone"
                                         id="pref-show-out">
                                     <span class="slider"></span>
