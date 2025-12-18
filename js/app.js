@@ -906,5 +906,39 @@ app.directive('auto-expand', {
     }
 });
 
+/**
+ * Pull-to-Refresh Prevention for Android
+ * Prevents the browser's default pull-to-refresh behavior which resets the page
+ */
+(function () {
+    let touchStartY = 0;
+    let touchStartX = 0;
+
+    document.addEventListener('touchstart', function (e) {
+        if (e.touches.length === 1) {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+        }
+    }, { passive: true });
+
+    document.addEventListener('touchmove', function (e) {
+        if (e.touches.length !== 1) return;
+
+        const touchY = e.touches[0].clientY;
+        const touchX = e.touches[0].clientX;
+        const deltaY = touchY - touchStartY;
+        const deltaX = touchX - touchStartX;
+
+        // Only prevent if pulling down at the top of the page
+        // and the gesture is primarily vertical (not horizontal scroll)
+        const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+
+        if (scrollTop <= 0 && deltaY > 0 && Math.abs(deltaY) > Math.abs(deltaX)) {
+            // User is pulling down from the top of the page - block this
+            e.preventDefault();
+        }
+    }, { passive: false });
+})();
+
 // Defer mounting until all components are registered (see index.html)
 window.__heroApp = app;

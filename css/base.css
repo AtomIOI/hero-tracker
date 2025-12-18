@@ -4,11 +4,28 @@
     box-sizing: border-box;
 }
 
-html, body {
-    overscroll-behavior-y: contain; /* Disables pull-to-refresh on Android */
+html {
+    /* Comprehensive pull-to-refresh prevention */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    overflow: hidden;
+    height: 100%;
+    position: fixed;
+    width: 100%;
 }
 
 body {
+    /* Pull-to-refresh prevention */
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+    width: 100%;
+    position: relative;
+    /* Prevents pull-down gesture on Android Chrome/WebView */
+    touch-action: pan-y pinch-zoom;
+    /* Styling */
     font-family: var(--font-body), sans-serif;
     background-color: var(--color-paper);
     /* Vintage Paper Texture */
