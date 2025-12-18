@@ -21,7 +21,7 @@ app.component('dice-page', {
     <div class="dice-page pb-nav">
         <!-- Dice Tray Header -->
         <div class="comic-header-box comic-header-teal">
-            <h1 class="comic-title">{{ hero.preferences?.hideDiceTray ? 'DICE' : 'DICE TRAY' }}</h1>
+            <h1 class="comic-title">{{ hero.preferences?.hideDiceTray ? 'MODIFIERS' : 'DICE TRAY' }}</h1>
         </div>
 
         <div v-if="!hero.preferences?.hideDiceTray">
@@ -302,8 +302,8 @@ app.component('dice-page', {
             // Since we already checked for triples and double ones, this catches remaining pairs
             const uniqueValues = new Set(rawValues);
             if (uniqueValues.size < rawValues.length) {
-                 this.setImpactText("DOUBLES!");
-                 return;
+                this.setImpactText("DOUBLES!");
+                return;
             }
 
             // Standard Threshold Logic
