@@ -16,10 +16,10 @@
     <link rel="manifest" href="manifest.json">
 
     <!-- Icons -->
-    <link rel="icon" type="image/png" href="/assets/icons/Hero_Tracker_Icon.png">
-    <link rel="apple-touch-icon" href="/assets/icons/Hero_Tracker_Icon.png">
-    <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/Hero_Tracker_Icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/Hero_Tracker_Icon.png">
+    <link rel="icon" type="image/png" href="assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" href="assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/icons/Hero_Tracker_Icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/Hero_Tracker_Icon.png">
 
     <title>Hero Tracker - Nano Banana</title>
 
@@ -618,6 +618,12 @@
                                 </label>
                                 <label for="pref-hide-dice" class="font-comic font-bold text-lg cursor-pointer">Hide Dice
                                     Tray</label>
+                                    <input type="checkbox" v-model="characterSheet.hero.preferences.showOutZone"
+                                        id="pref-show-out">
+                                    <span class="slider"></span>
+                                </label>
+                                <label for="pref-show-out" class="font-comic font-bold text-lg cursor-pointer">Show Out
+                                    Ability</label>
                             </div>
                         </div>
                     </div>
