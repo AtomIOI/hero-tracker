@@ -617,8 +617,12 @@
                                         id="pref-hide-dice">
                                     <span class="slider"></span>
                                 </label>
-                                <label for="pref-hide-dice" class="font-comic font-bold text-lg cursor-pointer">Hide Dice
+                                <label for="pref-hide-dice" class="font-comic font-bold text-lg cursor-pointer">Hide
+                                    Dice
                                     Tray</label>
+                            </div>
+                            <div class="flex items-center mt-2">
+                                <label class="toggle-switch">
                                     <input type="checkbox" v-model="characterSheet.hero.preferences.showOutZone"
                                         id="pref-show-out">
                                     <span class="slider"></span>
@@ -717,7 +721,8 @@
                         <div class="section-label">APPLICATION</div>
                         <div class="form-group">
                             <label class="block font-bangers tracking-wide text-lg mb-2">UPDATE</label>
-                            <p class="text-sm text-gray-600 mb-2 font-comic">Update to the latest version. Your data will be preserved.</p>
+                            <p class="text-sm text-gray-600 mb-2 font-comic">Update to the latest version. Your data
+                                will be preserved.</p>
                             <button class="comic-btn secondary full-width" @click="updateApp">UPDATE APP</button>
                         </div>
                     </div>
@@ -734,7 +739,8 @@
             <!-- Dice Page -->
             <div v-if="currentPage === 'dice'">
                 <dice-page :hero="characterSheet.hero" :initial-dice="diceSelection"
-                    @update-dice="updateDiceSelection"></dice-page>
+                    :initial-modifiers="characterSheet.hero.modifiers" @update-dice="updateDiceSelection"
+                    @update-modifiers="updateModifiers"></dice-page>
             </div>
         </main>
 
