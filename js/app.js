@@ -85,7 +85,9 @@ const app = createApp({
                         { id: 'laser-eyes', name: 'Laser Eyes', die: 8, zone: 'green', text: 'Shoots lasers from eyes.', traitId: 'lightning-bolt' },
                         { id: 'flight', name: 'Flight', die: 10, zone: 'yellow', text: 'Can fly.', traitId: 'weather-control' },
                         { id: 'super-strength', name: 'Super Strength', die: 12, zone: 'red', text: 'Is very strong.', traitId: 'leadership' }
-                    ]
+                    ],
+                    /** @type {Array<Object>} Dice page modifiers - persisted across navigation */
+                    modifiers: []
                 }
             },
             /** @type {boolean} Controls visibility of the Add/Edit Ability Modal */
@@ -677,6 +679,13 @@ const app = createApp({
          */
         updateDiceSelection(newDice) {
             this.diceSelection = [...newDice];
+        },
+        /**
+         * Updates the global modifiers state from the Dice Page.
+         * @param {Array<Object>} newModifiers - The updated modifiers array.
+         */
+        updateModifiers(newModifiers) {
+            this.characterSheet.hero.modifiers = [...newModifiers];
         },
 
         /**

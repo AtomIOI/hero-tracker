@@ -14,9 +14,17 @@ app.component('dice-page', {
          * The initial dice selection passed from parent.
          * @type {Array<number>}
          */
-        initialDice: Array
+        initialDice: Array,
+        /**
+         * The initial modifiers passed from parent for persistence.
+         * @type {Array<Object>}
+         */
+        initialModifiers: {
+            type: Array,
+            default: () => []
+        }
     },
-    emits: ['update-dice'],
+    emits: ['update-dice', 'update-modifiers'],
     template: `
     <div class="dice-page pb-nav">
         <!-- Dice Tray Header -->
@@ -275,7 +283,7 @@ app.component('dice-page', {
 
             // Redesigned Modifiers Data
             /** @type {Array<Object>} List of modifiers with new structure */
-            modifiers: [], // { id, name, value, isPersistent, isActive }
+            modifiers: [], // Initialized from props in created hook
 
             // Add Modal State
             /** @type {boolean} Whether the add modifier modal is shown */
@@ -337,6 +345,29 @@ app.component('dice-page', {
          */
         hasTemporaryMods() {
             return this.modifiers.some(m => !m.isPersistent);
+        }
+    },
+    /**
+     * Lifecycle hook to initialize modifiers from props.
+     */
+    created() {
+        // Initialize modifiers from props (deep copy to avoid mutation)
+        if (this.initialModifiers && this.initialModifiers.length > 0) {
+            this.modifiers = this.initialModifiers.map(m => ({ ...m }));
+        }
+    },
+    /**
+     * Watchers for persisting state changes.
+     */
+    watch: {
+        /**
+         * Deep watch modifiers and emit changes to parent for persistence.
+         */
+        modifiers: {
+            handler(newVal) {
+                this.$emit('update-modifiers', newVal);
+            },
+            deep: true
         }
     },
     methods: {
