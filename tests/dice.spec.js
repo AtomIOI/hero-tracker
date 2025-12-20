@@ -35,23 +35,99 @@ test.describe('Dice Page', () => {
         expect(Number(maxVal)).not.toBeNaN();
     });
 
-    test('should add and remove modifier', async ({ page }) => {
+    test('should add modifier via modal', async ({ page }) => {
         test.setTimeout(60000);
-        // Add modifier
-        await page.fill('input[placeholder="Name (e.g. High Ground)"]', 'Test Mod');
-        await page.fill('input[placeholder="+1"]', '2');
-        await page.click('.add-modifier-form button.comic-btn.plus');
 
-        // Verify added
-        const modChip = page.locator('.modifier-chip').filter({ hasText: 'Test Mod' });
-        await expect(modChip).toBeVisible();
-        await expect(modChip).toContainText('+2');
-        await expect(page.locator('.modifiers-header')).toContainText('(+2)');
+        // Verify initial total is +0
+        await expect(page.locator('.total-value')).toHaveText('+0');
 
-        // Remove modifier
-        await modChip.locator('.delete-mod-btn').click();
-        await expect(modChip).not.toBeVisible();
-        await expect(page.locator('.modifiers-header')).toContainText('MODIFIERS (0)');
+        // Click add button to open modal
+        await page.click('.add-mod-btn');
+
+        // Modal should be visible
+        await expect(page.locator('.add-mod-modal')).toBeVisible();
+
+        // Click +3 preset
+        await page.click('.preset-btn:has-text("+3")');
+
+        // Enter name
+        await page.fill('.mod-name-input', 'High Ground');
+
+        // Click create
+        await page.click('.modal-btn.create');
+
+        // Modal should close
+        await expect(page.locator('.add-mod-modal')).not.toBeVisible();
+
+        // Verify modifier banner appears
+        const modBanner = page.locator('.modifier-banner').filter({ hasText: 'High Ground' });
+        await expect(modBanner).toBeVisible();
+        await expect(modBanner).toContainText('+3');
+
+        // Verify total updated
+        await expect(page.locator('.total-value')).toHaveText('+3');
+    });
+
+    test('should toggle modifier active state on tap', async ({ page }) => {
+        test.setTimeout(60000);
+
+        // Add a modifier first
+        await page.click('.add-mod-btn');
+        await page.click('.preset-btn:has-text("+2")');
+        await page.fill('.mod-name-input', 'Cover');
+        await page.click('.modal-btn.create');
+
+        // Verify total is +2
+        await expect(page.locator('.total-value')).toHaveText('+2');
+
+        // Click the modifier to toggle inactive
+        await page.click('.modifier-banner');
+
+        // Verify total is now +0 (modifier inactive)
+        await expect(page.locator('.total-value')).toHaveText('+0');
+
+        // Verify banner has inactive class
+        await expect(page.locator('.modifier-banner')).toHaveClass(/inactive/);
+
+        // Click again to reactivate
+        await page.click('.modifier-banner');
+
+        // Verify total is +2 again
+        await expect(page.locator('.total-value')).toHaveText('+2');
+    });
+
+    test('should clear temporary modifiers', async ({ page }) => {
+        test.setTimeout(60000);
+
+        // Add a temporary modifier (default is temp)
+        await page.click('.add-mod-btn');
+        await page.click('.preset-btn:has-text("+1")');
+        await page.fill('.mod-name-input', 'TempMod');
+        await page.click('.modal-btn.create');
+
+        // Verify modifier exists
+        await expect(page.locator('.modifier-banner')).toBeVisible();
+
+        // Verify Clear Temp button is visible
+        await expect(page.locator('.clear-temp-btn')).toBeVisible();
+
+        // Click Clear Temp
+        await page.click('.clear-temp-btn');
+
+        // Verify modifier is gone
+        await expect(page.locator('.modifier-banner')).not.toBeVisible();
+
+        // Verify Clear Temp button is hidden (no temp mods left)
+        await expect(page.locator('.clear-temp-btn')).not.toBeVisible();
+    });
+
+    test('should show modifiers container with speech bubble', async ({ page }) => {
+        // Verify the new modifiers container structure exists
+        await expect(page.locator('.modifiers-container')).toBeVisible();
+        await expect(page.locator('.total-header')).toBeVisible();
+        await expect(page.locator('.total-bubble')).toBeVisible();
+        await expect(page.locator('.modifier-list')).toBeVisible();
+        await expect(page.locator('.controls-footer')).toBeVisible();
     });
 
     test('should change selected die', async ({ page }) => {
