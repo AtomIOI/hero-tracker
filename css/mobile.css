@@ -53,12 +53,27 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
     width: 100%;
+    max-width: 100%;
     box-sizing: border-box;
+}
+
+/* Ensure the zone container doesn't overflow */
+.zone-container:has(.overcome-actions-grid) {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Ensure grid item wrappers don't overflow */
+.overcome-actions-grid>div {
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
 }
 
 /* Ensure overcome ability cards don't overflow */
 .overcome-actions-grid .ability-card {
     min-width: 0;
+    max-width: 100%;
     overflow: hidden;
     word-wrap: break-word;
 }
@@ -73,6 +88,12 @@
     -webkit-box-orient: vertical;
     line-height: 1.2;
     font-size: 1.1rem;
+}
+
+/* Make overcome action badge labels smaller */
+.overcome-actions-grid .ability-card-header .rounded {
+    font-size: 0.78rem;
+    padding: 0.15rem 0.4rem;
 }
 
 /* Dice tray - vertical layout */
