@@ -50,17 +50,29 @@
 
 /* Overcome actions - always 2 columns, even on mobile */
 .overcome-actions-grid.modules-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Move overcome section label up more to avoid overlapping card titles */
-.zone-container:has(.overcome-actions-grid) {
-    margin-top: 2.5rem;
+/* Ensure overcome ability cards don't overflow */
+.overcome-actions-grid .ability-card {
+    min-width: 0;
+    overflow: hidden;
+    word-wrap: break-word;
 }
 
-.zone-container:has(.overcome-actions-grid) .section-label {
-    top: -20px;
+/* Allow overcome ability titles to wrap to two lines */
+.overcome-actions-grid .ability-card h3 {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.2;
+    font-size: 1.1rem;
 }
 
 /* Dice tray - vertical layout */
