@@ -77,35 +77,167 @@ app.component('dice-page', {
              <div class="result-box max"><div class="result-label">MAX</div><div class="result-value">-</div></div>
         </div>
 
-        <!-- Modifiers Section -->
-        <div class="modifiers-section">
-            <div class="modifiers-header">MODIFIERS ({{ totalModifier > 0 ? '+' : '' }}{{ totalModifier }})</div>
+        <!-- Redesigned Modifiers Section -->
+        <div class="modifiers-container">
+            <!-- Sticker Label -->
+            <div class="section-label">MODIFIERS</div>
 
-            <div class="modifiers-list">
-                <div v-for="mod in modifiers" :key="mod.id"
-                     class="modifier-chip"
-                     :class="{ active: mod.active, persistent: mod.type === 'persistent', temporary: mod.type === 'temporary' }"
-                     @click="toggleModifier(mod)">
-                    <span>{{ mod.name }}</span>
-                    <span class="modifier-value">{{ mod.value > 0 ? '+' : '' }}{{ mod.value }}</span>
-                    <span class="delete-mod-btn" @click.stop="removeModifier(mod.id)">×</span>
+            <!-- Total Header - Speech Bubble -->
+            <div class="total-header">
+                <div class="total-bubble" 
+                     :class="{ 'positive-bubble': totalModifier > 0, 'negative-bubble': totalModifier < 0, 'neutral-bubble': totalModifier === 0 }"
+                     :style="{ '--intensity': Math.min(Math.abs(totalModifier) / 10, 1) }">
+                    <div class="total-value" :class="{ positive: totalModifier > 0, negative: totalModifier < 0 }">
+                        {{ totalModifier >= 0 ? '+' : '' }}{{ totalModifier }}
+                    </div>
                 </div>
             </div>
 
-            <!-- Add Modifier Form -->
-            <div class="add-modifier-form">
-                <input type="text" v-model="newModName" placeholder="Name (e.g. High Ground)" />
-                <input type="number" v-model.number="newModValue" style="width: 50px;" placeholder="+1" />
-                <select v-model="newModType">
-                    <option value="temporary">Temp</option>
-                    <option value="persistent">Persist</option>
-                </select>
-                <button class="comic-btn plus" @click="addModifier" style="padding: 0.2rem 0.5rem;">+</button>
+            <!-- Modifier List -->
+            <div class="modifier-list">
+                <div v-if="modifiers.length === 0" class="modifier-list-empty">
+                    No modifiers. Tap + to add one!
+                </div>
+                <div v-for="mod in modifiers" 
+                     :key="mod.id"
+                     class="modifier-banner"
+                     :class="{ 
+                         buff: mod.value >= 0, 
+                         debuff: mod.value < 0,
+                         inactive: !mod.isActive 
+                     }"
+                     @click="toggleModifier(mod)"
+                     @touchstart="startLongPress(mod, $event)"
+                     @touchend="cancelLongPress"
+                     @touchcancel="cancelLongPress"
+                     @mousedown="startLongPress(mod, $event)"
+                     @mouseup="cancelLongPress"
+                     @mouseleave="cancelLongPress"
+                     @contextmenu.prevent>
+                    <div class="modifier-info">
+                        <img class="persist-icon" :src="mod.isPersistent ? 'assets/icons/icon_persitent.png' : 'assets/icons/icon_temporary.png'" :alt="mod.isPersistent ? 'Persistent' : 'Temporary'">
+                        <span class="modifier-name">{{ mod.name || 'Modifier' }}</span>
+                    </div>
+                    <div class="modifier-value-display">
+                        {{ mod.value >= 0 ? '+' : '' }}{{ mod.value }}
+                    </div>
+                </div>
             </div>
 
-            <button v-if="hasTemporaryActive" class="comic-btn minus full-width" style="margin-top: 1rem;" @click="clearUsedModifiers">
-                Clear Used Temp Mods
-            </button>
+            <!-- Controls Footer -->
+            <div class="controls-footer">
+                <button v-if="hasTemporaryMods" class="clear-temp-btn" @click="clearTempModifiers">
+                    CLEAR TEMP
+                </button>
+                <button class="add-mod-btn" @click="openAddModal">
+                    + ADD
+                </button>
+            </div>
+        </div>
+
+        <!-- Add Modifier Modal -->
+        <div v-if="showAddModal" class="add-mod-modal-overlay" @click="closeAddModal">
+            <div class="add-mod-modal" @click.stop>
+                <div class="modal-header">ADD MODIFIER</div>
+                
+                <!-- Persistence Toggle -->
+                <div class="persist-toggle">
+                    <div class="persist-option" 
+                         :class="{ selected: !newModIsPersistent }"
+                         @click="newModIsPersistent = false">
+                        <img src="assets/icons/icon_temporary.png" alt="Temporary" class="toggle-icon"> TEMP
+                    </div>
+                    <div class="persist-option" 
+                         :class="{ selected: newModIsPersistent }"
+                         @click="newModIsPersistent = true">
+                        <img src="assets/icons/icon_persitent.png" alt="Persistent" class="toggle-icon"> PERSIST
+                    </div>
+                </div>
+
+                <!-- Preset Grid -->
+                <div class="preset-grid">
+                    <div v-for="preset in presetValues" 
+                         :key="preset"
+                         class="preset-btn"
+                         :class="{ 
+                             positive: preset > 0, 
+                             negative: preset < 0,
+                             selected: newModValue === preset && !useCustomValue
+                         }"
+                         @click="applyPreset(preset)">
+                        {{ preset > 0 ? '+' : '' }}{{ preset }}
+                    </div>
+                </div>
+
+                <!-- Custom Value Input -->
+                <div class="custom-value-section">
+                    <div class="custom-value-row">
+                        <button class="custom-adjust-btn" @click="adjustCustomValue(-1)">−</button>
+                        <input type="number" 
+                               class="custom-value-input"
+                               v-model.number="customModValue"
+                               @focus="useCustomValue = true"
+                               @input="useCustomValue = true"
+                               placeholder="0">
+                        <button class="custom-adjust-btn" @click="adjustCustomValue(1)">+</button>
+                    </div>
+                </div>
+
+
+                <!-- Name Input -->
+                <input type="text" 
+                       class="mod-name-input" 
+                       v-model="newModName" 
+                       placeholder="Name (optional)">
+
+                <!-- Modal Actions -->
+                <div class="modal-actions">
+                    <button class="modal-btn cancel" @click="closeAddModal">CANCEL</button>
+                    <button class="modal-btn create" 
+                            @click="addModifier" 
+                            :disabled="getEffectiveModValue() === null || getEffectiveModValue() === ''">
+                        CREATE
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Modifier Modal -->
+        <div v-if="showEditModal" class="add-mod-modal-overlay" @click="closeEditModal">
+            <div class="edit-mod-modal" @click.stop>
+                <div class="modal-header">EDIT MODIFIER</div>
+                
+                <!-- Persistence Toggle -->
+                <div class="persist-toggle">
+                    <div class="persist-option" 
+                         :class="{ selected: !editingMod.isPersistent }"
+                         @click="editingMod.isPersistent = false">
+                        <img src="assets/icons/icon_temporary.png" alt="Temporary" class="toggle-icon"> TEMP
+                    </div>
+                    <div class="persist-option" 
+                         :class="{ selected: editingMod.isPersistent }"
+                         @click="editingMod.isPersistent = true">
+                        <img src="assets/icons/icon_persitent.png" alt="Persistent" class="toggle-icon"> PERSIST
+                    </div>
+                </div>
+
+                <!-- Edit Fields -->
+                <div class="edit-form-group">
+                    <label class="edit-form-label">NAME</label>
+                    <input type="text" class="edit-form-input" v-model="editingMod.name" placeholder="Modifier name">
+                </div>
+                <div class="edit-form-group">
+                    <label class="edit-form-label">VALUE</label>
+                    <input type="number" class="edit-form-input" v-model.number="editingMod.value">
+                </div>
+
+                <!-- Edit Modal Actions -->
+                <div class="edit-modal-actions">
+                    <button class="modal-btn save" @click="saveEditedModifier">SAVE</button>
+                    <button class="modal-btn cancel" @click="closeEditModal">CANCEL</button>
+                    <button class="modal-btn delete" @click="deleteModifier">DELETE</button>
+                </div>
+            </div>
         </div>
 
         <!-- Dice Selector Modal -->
@@ -138,14 +270,43 @@ app.component('dice-page', {
             lastImpactText: null,
             /** @type {boolean} Whether the current roll is a critical fail */
             isCriticalFail: false,
-            /** @type {Array<Object>} List of modifiers */
-            modifiers: [], // { id, name, value, type, active }
+
+            // Redesigned Modifiers Data
+            /** @type {Array<Object>} List of modifiers with new structure */
+            modifiers: [], // { id, name, value, isPersistent, isActive }
+
+            // Add Modal State
+            /** @type {boolean} Whether the add modifier modal is shown */
+            showAddModal: false,
             /** @type {string} Name input for new modifier */
             newModName: '',
-            /** @type {number} Value input for new modifier */
-            newModValue: 1,
-            /** @type {string} Type input for new modifier ('temporary' or 'persistent') */
-            newModType: 'temporary',
+            /** @type {number|null} Value input for new modifier */
+            newModValue: null,
+            /** @type {boolean} Whether new modifier is persistent */
+            newModIsPersistent: false,
+            /** @type {number[]} Preset values for quick selection */
+            presetValues: [5, 4, 3, 2, 1, -1, -2, -3, -4, -5],
+            /** @type {number|null} Custom value input for modifier beyond presets */
+            customModValue: null,
+            /** @type {boolean} Whether using custom value instead of preset */
+            useCustomValue: false,
+
+            // Edit Modal State
+            /** @type {boolean} Whether the edit modifier modal is shown */
+            showEditModal: false,
+            /** @type {Object|null} Copy of modifier being edited */
+            editingMod: null,
+            /** @type {string|null} ID of modifier being edited */
+            editingModId: null,
+
+            // Long Press State
+            /** @type {number|null} Timeout ID for long press detection */
+            longPressTimeout: null,
+            /** @type {number} Duration for long press in ms */
+            longPressDuration: 500,
+            /** @type {boolean} Whether a long press was triggered */
+            longPressTriggered: false,
+
             /** @type {number|null} ID of the timeout for clearing impact text */
             impactTimeoutId: null
         };
@@ -157,7 +318,7 @@ app.component('dice-page', {
          */
         totalModifier() {
             return this.modifiers
-                .filter(m => m.active)
+                .filter(m => m.isActive)
                 .reduce((sum, m) => sum + m.value, 0);
         },
         /**
@@ -169,11 +330,11 @@ app.component('dice-page', {
             return this.rollResults.mid + this.totalModifier;
         },
         /**
-         * Checks if there are any active temporary modifiers.
-         * @returns {boolean} True if any active temporary modifiers exist.
+         * Checks if there are any temporary modifiers (for button visibility).
+         * @returns {boolean} True if any temporary modifiers exist.
          */
-        hasTemporaryActive() {
-            return this.modifiers.some(m => m.active && m.type === 'temporary');
+        hasTemporaryMods() {
+            return this.modifiers.some(m => !m.isPersistent);
         }
     },
     methods: {
@@ -300,8 +461,8 @@ app.component('dice-page', {
             // Since we already checked for triples and double ones, this catches remaining pairs
             const uniqueValues = new Set(rawValues);
             if (uniqueValues.size < rawValues.length) {
-                 this.setImpactText("DOUBLES!");
-                 return;
+                this.setImpactText("DOUBLES!");
+                return;
             }
 
             // Standard Threshold Logic
@@ -345,42 +506,150 @@ app.component('dice-page', {
                 this.impactTimeoutId = null;
             }, 1500);
         },
+
+        // ==================== MODIFIER METHODS ====================
+
+        /**
+         * Opens the add modifier modal.
+         */
+        openAddModal() {
+            this.showAddModal = true;
+            this.newModName = '';
+            this.newModValue = null;
+            this.newModIsPersistent = false;
+            this.customModValue = null;
+            this.useCustomValue = false;
+        },
+        /**
+         * Closes the add modifier modal.
+         */
+        closeAddModal() {
+            this.showAddModal = false;
+        },
+        /**
+         * Applies a preset value to the new modifier.
+         * @param {number} value - The preset value.
+         */
+        applyPreset(value) {
+            this.newModValue = value;
+            this.customModValue = value;
+            this.useCustomValue = false;
+        },
+        /**
+         * Adjusts the custom modifier value by the specified amount.
+         * @param {number} amount - The amount to adjust by.
+         */
+        adjustCustomValue(amount) {
+            this.useCustomValue = true;
+            if (this.customModValue === null || this.customModValue === '') {
+                this.customModValue = amount;
+            } else {
+                this.customModValue = Number(this.customModValue) + amount;
+            }
+        },
+        /**
+         * Gets the effective modifier value (preset or custom).
+         * @returns {number|null} The effective value.
+         */
+        getEffectiveModValue() {
+            if (this.useCustomValue) {
+                return this.customModValue;
+            }
+            return this.newModValue;
+        },
         /**
          * Adds a new modifier to the list.
          */
         addModifier() {
-            if (!this.newModName) return;
+            const value = this.getEffectiveModValue();
+            if (value === null || value === '') return;
             this.modifiers.push({
-                id: Date.now(),
-                name: this.newModName,
-                value: this.newModValue,
-                type: this.newModType,
-                active: true // Auto-activate on add
+                id: Date.now().toString(),
+                name: this.newModName || 'Modifier',
+                value: Number(value),
+                isPersistent: this.newModIsPersistent,
+                isActive: true // Auto-activate on add
             });
-            this.newModName = '';
-            this.newModValue = 1;
+            this.closeAddModal();
         },
         /**
-         * Toggles the active state of a modifier.
+         * Toggles the active state of a modifier (tap action).
          * @param {Object} mod - The modifier object.
          */
         toggleModifier(mod) {
-            mod.active = !mod.active;
+            // Only toggle if long press wasn't triggered
+            if (!this.longPressTriggered) {
+                mod.isActive = !mod.isActive;
+            }
+            this.longPressTriggered = false;
         },
         /**
-         * Removes a modifier from the list.
-         * @param {number} id - The ID of the modifier to remove.
+         * Starts the long press timer for a modifier.
+         * @param {Object} mod - The modifier object.
+         * @param {Event} event - The event object.
          */
-        removeModifier(id) {
-            this.modifiers = this.modifiers.filter(m => m.id !== id);
+        startLongPress(mod, event) {
+            this.longPressTriggered = false;
+            this.longPressTimeout = setTimeout(() => {
+                this.longPressTriggered = true;
+                this.openEditModal(mod);
+            }, this.longPressDuration);
         },
         /**
-         * Clears all active temporary modifiers.
+         * Cancels the long press timer.
          */
-        clearUsedModifiers() {
-            // Remove active temporary modifiers
-            // Or just deactivate them? "disappear after you use them" suggests removal.
-            this.modifiers = this.modifiers.filter(m => !(m.active && m.type === 'temporary'));
+        cancelLongPress() {
+            if (this.longPressTimeout) {
+                clearTimeout(this.longPressTimeout);
+                this.longPressTimeout = null;
+            }
+        },
+        /**
+         * Opens the edit modifier modal.
+         * @param {Object} mod - The modifier to edit.
+         */
+        openEditModal(mod) {
+            this.editingModId = mod.id;
+            // Create a copy to edit
+            this.editingMod = {
+                name: mod.name,
+                value: mod.value,
+                isPersistent: mod.isPersistent
+            };
+            this.showEditModal = true;
+        },
+        /**
+         * Closes the edit modifier modal.
+         */
+        closeEditModal() {
+            this.showEditModal = false;
+            this.editingMod = null;
+            this.editingModId = null;
+        },
+        /**
+         * Saves changes to the modifier being edited.
+         */
+        saveEditedModifier() {
+            const mod = this.modifiers.find(m => m.id === this.editingModId);
+            if (mod) {
+                mod.name = this.editingMod.name || 'Modifier';
+                mod.value = Number(this.editingMod.value);
+                mod.isPersistent = this.editingMod.isPersistent;
+            }
+            this.closeEditModal();
+        },
+        /**
+         * Deletes the modifier being edited.
+         */
+        deleteModifier() {
+            this.modifiers = this.modifiers.filter(m => m.id !== this.editingModId);
+            this.closeEditModal();
+        },
+        /**
+         * Clears all temporary modifiers (destructive delete).
+         */
+        clearTempModifiers() {
+            this.modifiers = this.modifiers.filter(m => m.isPersistent);
         }
     }
 });

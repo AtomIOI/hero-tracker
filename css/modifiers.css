@@ -1,0 +1,698 @@
+/* ===========================================
+   MODIFIERS SECTION - Vintage Comic Book Style
+   =========================================== */
+
+/* Container for entire modifiers section */
+.modifiers-container {
+    background-color: var(--comic-cream);
+    background-image: radial-gradient(rgba(0, 0, 0, 0.15) 15%, transparent 16%);
+    background-size: 10px 10px;
+    border: 4px solid var(--ink-black);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 6rem;
+    box-shadow: 6px 6px 0px var(--ink-black);
+    position: relative;
+}
+
+/* ===========================================
+   TOTAL HEADER - Vintage Comic Starburst Badge
+   =========================================== */
+.total-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-top: 0.5rem;
+}
+
+/* Starburst container for layering */
+.total-bubble {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(3px 3px 0px var(--ink-black));
+    transition: filter 0.5s ease;
+}
+
+/* Default/Neutral glow animation (grey) */
+.total-bubble.neutral-bubble {
+    animation: circle-glow-neutral 3s ease-in-out infinite;
+}
+
+@keyframes circle-glow-neutral {
+
+    0%,
+    100% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 8px rgba(156, 163, 175, 0.4));
+    }
+
+    50% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 15px rgba(156, 163, 175, 0.7));
+    }
+}
+
+/* Positive glow animation (green) */
+.total-bubble.positive-bubble {
+    animation: circle-glow-positive 3s ease-in-out infinite;
+}
+
+@keyframes circle-glow-positive {
+
+    0%,
+    100% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 8px rgba(34, 197, 94, 0.4));
+    }
+
+    50% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 15px rgba(34, 197, 94, 0.7));
+    }
+}
+
+/* Negative glow animation (red) */
+.total-bubble.negative-bubble {
+    animation: circle-glow-negative 3s ease-in-out infinite;
+}
+
+@keyframes circle-glow-negative {
+
+    0%,
+    100% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 8px rgba(239, 68, 68, 0.4));
+    }
+
+    50% {
+        filter: drop-shadow(3px 3px 0px var(--ink-black)) drop-shadow(0 0 15px rgba(239, 68, 68, 0.7));
+    }
+}
+
+/* The circle with gradient border - default neutral */
+.total-bubble::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #6b7280 0%, #9ca3af 50%, #d1d5db 100%);
+    border-radius: 50%;
+    border: 4px solid var(--ink-black);
+    z-index: 0;
+    transition: background 0.5s ease;
+}
+
+/* Positive gradient (green) - light to dark based on intensity */
+.total-bubble.positive-bubble::before {
+    --light-green: #bbf7d0;
+    --mid-green: #86efac;
+    --dark-green: #16a34a;
+    background: linear-gradient(135deg,
+            color-mix(in srgb, var(--light-green), var(--dark-green) calc(var(--intensity, 0) * 100%)) 0%,
+            color-mix(in srgb, var(--mid-green), var(--dark-green) calc(var(--intensity, 0) * 80%)) 50%,
+            color-mix(in srgb, var(--light-green), var(--mid-green) calc(var(--intensity, 0) * 60%)) 100%);
+}
+
+/* Negative gradient (red) - light to dark based on intensity */
+.total-bubble.negative-bubble::before {
+    --light-red: #fecaca;
+    --mid-red: #f87171;
+    --dark-red: #dc2626;
+    background: linear-gradient(135deg,
+            color-mix(in srgb, var(--light-red), var(--dark-red) calc(var(--intensity, 0) * 100%)) 0%,
+            color-mix(in srgb, var(--mid-red), var(--dark-red) calc(var(--intensity, 0) * 80%)) 50%,
+            color-mix(in srgb, var(--light-red), var(--mid-red) calc(var(--intensity, 0) * 60%)) 100%);
+}
+
+/* Inner circle for contrast */
+.total-bubble::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: var(--comic-cream);
+    border-radius: 50%;
+    border: 3px solid var(--ink-black);
+    z-index: 1;
+}
+
+.total-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    color: var(--ink-black);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 2;
+    position: relative;
+    margin-bottom: -2px;
+}
+
+.total-value {
+    font-family: 'Comic Neue', cursive;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: var(--ink-black);
+    line-height: 1;
+    z-index: 2;
+    position: relative;
+}
+
+.total-value.positive {
+    color: var(--comic-green-bg);
+    text-shadow: 1px 1px 0px var(--ink-black);
+}
+
+.total-value.negative {
+    color: var(--comic-red);
+    text-shadow: 1px 1px 0px var(--ink-black);
+}
+
+/* ===========================================
+   MODIFIER LIST - Container for banners
+   =========================================== */
+.modifier-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+    max-height: 165px;
+    /* Adjusted to fit 8 modifiers without scrolling */
+    overflow-y: auto;
+    /* Kept overflow-y for consistency with original, but max-height should prevent scroll for 8 */
+    padding: 0.25rem;
+}
+
+/* Empty state message */
+.modifier-list-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-family: var(--font-body);
+    font-style: italic;
+    color: #666;
+    padding: 1rem;
+}
+
+/* ===========================================
+   MODIFIER BANNER - Compact comic-style
+   =========================================== */
+.modifier-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.25rem 0.5rem;
+    border: 2px solid var(--ink-black);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    transform: skewX(-2deg);
+    box-shadow: 2px 2px 0px var(--ink-black);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    min-height: 28px;
+}
+
+.modifier-banner:active {
+    transform: skewX(-2deg) translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+/* Buff (Positive) - Yellow to Orange gradient */
+.modifier-banner.buff {
+    background: linear-gradient(135deg, var(--comic-yellow) 0%, #F4A935 100%);
+}
+
+/* Debuff (Negative) - Blue to Purple gradient */
+.modifier-banner.debuff {
+    background: linear-gradient(135deg, var(--comic-blue) 0%, var(--comic-purple) 100%);
+    color: var(--comic-white);
+}
+
+.modifier-banner.debuff .modifier-name,
+.modifier-banner.debuff .modifier-value-display {
+    color: var(--comic-white);
+}
+
+/* Inactive/Disabled state */
+.modifier-banner.inactive {
+    background: linear-gradient(135deg, #c0c0c0 0%, #a0a0a0 100%);
+    opacity: 0.6;
+    box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.modifier-banner.inactive .modifier-name,
+.modifier-banner.inactive .modifier-value-display,
+.modifier-banner.inactive .persist-icon {
+    color: #666;
+}
+
+/* Banner content layout */
+.modifier-info {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    transform: skewX(2deg);
+    /* Counter-skew text */
+    overflow: hidden;
+}
+
+.persist-icon {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    filter: drop-shadow(1px 1px 0px rgba(0, 0, 0, 0.3));
+    flex-shrink: 0;
+}
+
+/* Icon style for toggle buttons in modal */
+.toggle-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+
+.modifier-name {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--ink-black);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50px;
+}
+
+.modifier-value-display {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    color: var(--ink-black);
+    transform: skewX(2deg);
+    /* Counter-skew */
+    background: var(--comic-white);
+    border: 2px solid var(--ink-black);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.3);
+    flex-shrink: 0;
+}
+
+.modifier-banner.debuff .modifier-value-display {
+    background: var(--comic-white);
+    color: var(--ink-black);
+}
+
+/* ===========================================
+   CONTROLS FOOTER - Action Buttons
+   =========================================== */
+.controls-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.clear-temp-btn,
+.add-mod-btn {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    padding: 0.7rem 1.5rem;
+    border: 3px solid var(--ink-black);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 4px 4px 0px var(--ink-black);
+}
+
+.clear-temp-btn:active,
+.add-mod-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px var(--ink-black);
+}
+
+.clear-temp-btn {
+    background: var(--comic-red);
+    color: var(--comic-white);
+}
+
+.add-mod-btn {
+    background: var(--comic-green-bg);
+    color: var(--ink-black);
+}
+
+/* ===========================================
+   ADD MODIFIER MODAL
+   =========================================== */
+.add-mod-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(2px);
+}
+
+.add-mod-modal {
+    background: var(--comic-white);
+    border: 5px solid var(--ink-black);
+    border-radius: 12px;
+    padding: 1.25rem;
+    width: 90%;
+    max-width: 340px;
+    box-shadow: 6px 6px 0px var(--ink-black);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Yellow accent bar at top */
+.add-mod-modal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 8px;
+    background: var(--comic-yellow);
+}
+
+.modal-header {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--ink-black);
+    margin-bottom: 1.25rem;
+    margin-top: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Persistence Toggle - Pill style */
+.persist-toggle {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 1.25rem;
+    background: #e8e8e8;
+    border-radius: 25px;
+    padding: 4px;
+    border: 2px solid var(--ink-black);
+}
+
+.persist-option {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 22px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: transparent;
+    color: #666;
+    text-align: center;
+    box-shadow: none;
+}
+
+.persist-option:active {
+    transform: none;
+    box-shadow: none;
+}
+
+.persist-option.selected {
+    background: var(--comic-white);
+    color: var(--ink-black);
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    border: 2px solid var(--ink-black);
+}
+
+/* Preset Grid - 5 columns for +5 to +1 on top, -1 to -5 on bottom */
+.preset-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.preset-btn {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    border: 3px solid var(--ink-black);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 2px 2px 0px var(--ink-black);
+    text-align: center;
+    padding: 0;
+}
+
+.preset-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--ink-black);
+}
+
+.preset-btn.positive {
+    background: var(--comic-yellow);
+    color: var(--ink-black);
+}
+
+.preset-btn.negative {
+    background: var(--comic-blue);
+    color: var(--comic-white);
+}
+
+.preset-btn.selected {
+    transform: scale(1.12);
+    box-shadow: 3px 3px 0px var(--ink-black);
+    z-index: 1;
+    position: relative;
+    border-color: var(--comic-red);
+    border-width: 4px;
+}
+
+/* Custom Value Section */
+.custom-value-section {
+    margin-bottom: 1.25rem;
+    padding: 0.75rem;
+    background: var(--comic-cream);
+    border: 2px dashed var(--ink-black);
+    border-radius: 8px;
+}
+
+.custom-value-label {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    color: var(--ink-black);
+    text-align: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.custom-value-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.custom-adjust-btn {
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    border: 3px solid var(--ink-black);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 2px 2px 0px var(--ink-black);
+    background: var(--comic-purple);
+    color: var(--comic-white);
+}
+
+.custom-adjust-btn:active {
+    transform: translate(1px, 1px);
+    box-shadow: 1px 1px 0px var(--ink-black);
+}
+
+.custom-value-input {
+    width: 80px;
+    height: 44px;
+    text-align: center;
+    font-family: 'Comic Neue', cursive;
+    font-weight: 700;
+    font-size: 1.4rem;
+    border: 3px solid var(--ink-black);
+    border-radius: 8px;
+    background: var(--comic-white);
+    box-sizing: border-box;
+}
+
+.custom-value-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--comic-purple);
+}
+
+/* Hide number input spinners */
+.custom-value-input::-webkit-inner-spin-button,
+.custom-value-input::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-value-input[type=number] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+}
+
+/* Name Input */
+.mod-name-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    border: 3px solid var(--ink-black);
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    box-sizing: border-box;
+    background: var(--comic-white);
+}
+
+.mod-name-input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.mod-name-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--comic-yellow);
+}
+
+/* Modal Actions */
+.modal-actions {
+    display: flex;
+    gap: 0.6rem;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 0.75rem 0.75rem;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    border: 3px solid var(--ink-black);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    box-shadow: 3px 3px 0px var(--ink-black);
+}
+
+.modal-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px var(--ink-black);
+}
+
+.modal-btn.create {
+    background: var(--comic-green-bg);
+    color: var(--ink-black);
+    font-weight: bold;
+}
+
+.modal-btn.create:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
+}
+
+.modal-btn.cancel {
+    background: #f0f0f0;
+    color: var(--ink-black);
+}
+
+.modal-btn.delete {
+    background: var(--comic-red);
+    color: var(--comic-white);
+}
+
+.modal-btn.save {
+    background: var(--comic-blue);
+    color: var(--comic-white);
+}
+
+/* ===========================================
+   EDIT MODIFIER MODAL
+   =========================================== */
+.edit-mod-modal {
+    background: var(--comic-cream);
+    background-image: radial-gradient(var(--ink-black) 10%, transparent 11%);
+    background-size: 8px 8px;
+    border: 4px solid var(--ink-black);
+    border-radius: 8px;
+    padding: 1.5rem;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 8px 8px 0px var(--ink-black);
+    transform: rotate(1deg);
+}
+
+.edit-form-group {
+    margin-bottom: 1rem;
+}
+
+.edit-form-label {
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--ink-black);
+}
+
+.edit-form-input {
+    width: 100%;
+    padding: 0.7rem;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    border: 3px solid var(--ink-black);
+    border-radius: 4px;
+    box-sizing: border-box;
+    background: var(--comic-white);
+}
+
+.edit-form-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--comic-yellow);
+}
+
+/* Edit modal with 3 buttons */
+.edit-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.edit-modal-actions .modal-btn {
+    width: 100%;
+}
