@@ -54,7 +54,7 @@ app.component('ability-card', {
             const powers = this.hero.powers || [];
             const qualities = this.hero.qualities || [];
             return powers.find(p => p.id === this.ability.traitId) ||
-                   qualities.find(q => q.id === this.ability.traitId);
+                qualities.find(q => q.id === this.ability.traitId);
         },
         /**
          * Determines if the linked trait is a Power or Quality.
@@ -96,6 +96,10 @@ app.component('ability-card', {
          * @returns {string} 'ACTION', 'REACTION', or 'INHERENT'.
          */
         interactionLabel() {
+            // Principle abilities show as 'OVERCOME ACTION'
+            if (this.ability.zone === 'principle') {
+                return 'OVERCOME ACTION';
+            }
             const map = {
                 'action': 'ACTION',
                 'reaction': 'REACTION',
@@ -108,7 +112,7 @@ app.component('ability-card', {
          * @returns {string} The CSS class name.
          */
         interactionBgClass() {
-             const map = {
+            const map = {
                 'action': 'bg-blue-500',
                 'reaction': 'bg-purple-500',
                 'inherent': 'bg-orange-500'
