@@ -247,10 +247,8 @@
                         @click="openSceneTrackerModal">SCENE OVERRIDE</button>
                 </div>
                 <!-- Overcome Actions -->
-                <div v-if="principleAbilities.length > 0" class="zone-container mb-6">
-                    <div class="section-label" style="background-color: var(--comic-blue); color: white;">OVERCOME
-                        ACTIONS</div>
-                    <div class="abilities-grid modules-grid">
+                <div v-if="principleAbilities.length > 0" class="zone-container mb-6" style="margin-top: 0;">
+                    <div class="abilities-grid modules-grid overcome-actions-grid">
                         <div v-for="(ability, index) in principleAbilities" :key="ability.id"
                             @mousedown="handlePrincipleInteractionStart($event, index)"
                             @touchstart="handlePrincipleInteractionStart($event, index)"

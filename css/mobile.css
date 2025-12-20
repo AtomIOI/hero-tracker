@@ -48,6 +48,21 @@
     gap: 1rem;
 }
 
+/* Overcome actions - always 2 columns, even on mobile */
+.overcome-actions-grid.modules-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+}
+
+/* Move overcome section label up more to avoid overlapping card titles */
+.zone-container:has(.overcome-actions-grid) {
+    margin-top: 2.5rem;
+}
+
+.zone-container:has(.overcome-actions-grid) .section-label {
+    top: -20px;
+}
+
 /* Dice tray - vertical layout */
 .dice-controls {
     display: flex;
